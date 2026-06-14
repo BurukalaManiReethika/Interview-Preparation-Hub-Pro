@@ -1,0 +1,117 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regex Tester | Developer OS</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<style>
+.match{
+    margin-top:20px;
+    padding:15px;
+    border-radius:10px;
+    background:rgba(255,255,255,.08);
+}
+</style>
+
+</head>
+<body>
+
+<div class="tool-container">
+
+<a href="../index.html" class="back-btn">
+⬅ Back
+</a>
+
+<h2>🔍 Regex Tester</h2>
+
+<input
+type="text"
+id="regexPattern"
+placeholder="Enter regex pattern (example: \\d+)"
+>
+
+<textarea
+id="testText"
+rows="8"
+placeholder="Enter text to test..."
+></textarea>
+
+<button onclick="testRegex()">
+🚀 Test Regex
+</button>
+
+<div
+id="result"
+class="match"
+>
+Results will appear here...
+</div>
+
+</div>
+
+<script>
+
+function testRegex(){
+
+const pattern =
+document.getElementById(
+"regexPattern"
+).value;
+
+const text =
+document.getElementById(
+"testText"
+).value;
+
+const resultBox =
+document.getElementById(
+"result"
+);
+
+try{
+
+const regex =
+new RegExp(pattern,"g");
+
+const matches =
+text.match(regex);
+
+if(matches){
+
+resultBox.innerHTML =
+`
+<h3>✅ Matches Found</h3>
+<p>${matches.join(", ")}</p>
+<p>Total Matches: ${matches.length}</p>
+`;
+
+}
+else{
+
+resultBox.innerHTML =
+`
+<h3>❌ No Matches Found</h3>
+`;
+
+}
+
+}
+catch(error){
+
+resultBox.innerHTML =
+`
+<h3>⚠ Invalid Regex</h3>
+<p>${error.message}</p>
+`;
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
