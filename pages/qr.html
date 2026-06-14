@@ -1,105 +1,85 @@
 
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QR Generator | Developer OS</title>
-
-<link rel="stylesheet" href="../style.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Generator | Developer OS</title>
+  <link rel="stylesheet" href="../style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
-<div class="tool-container">
+  <div id="toast" class="toast">✓ Done!</div>
 
-<a href="../index.html" class="back-btn">
-⬅ Back
-</a>
+  <div class="tool-page">
+    <a href="../index.html" class="back-btn">← Back to tools</a>
+    <div class="tool-title">📱 QR Code Generator</div>
 
-<h2>📱 QR Code Generator</h2>
+    <div class="card-box">
+      <label>Text or URL</label>
+      <input type="text" id="qr-input" placeholder="https://example.com" oninput="debounceQR()">
 
-<input
-type="text"
-id="qrText"
-placeholder="Enter text or URL"
->
+      <div class="qr-canvas-wrap" id="qr-wrap">
+        <span class="qr-placeholder" id="qr-placeholder">Enter text above to generate a QR code</span>
+        <div id="qr-output"></div>
+      </div>
 
-<button onclick="generateQR()">
-Generate QR Code
-</button>
-
-<div
-id="qrResult"
-class="result"
-style="text-align:center;"
-></div>
-
-<button
-id="downloadBtn"
-style="display:none;"
-onclick="downloadQR()"
->
-⬇ Download QR
-</button>
-
-</div>
+      <div class="row">
+        <button class="btn btn-primary"   onclick="generateQR()">📱 Generate</button>
+        <button class="btn btn-secondary" onclick="downloadQR()">⬇ Download PNG</button>
+      </div>
+    </div>
+  </div>
 
 <script>
+let qrInstance = null, qrTimer = null;
 
-function generateQR(){
-
-const text =
-document.getElementById("qrText").value;
-
-const qrBox =
-document.getElementById("qrResult");
-
-if(text.trim() === ""){
-
-alert("Enter text or URL");
-
-return;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-qrBox.innerHTML = "";
-
-new QRCode(qrBox,{
-text:text,
-width:250,
-height:250
-});
-
-document.getElementById(
-"downloadBtn"
-).style.display = "block";
-
+function debounceQR() {
+  clearTimeout(qrTimer);
+  qrTimer = setTimeout(generateQR, 500);
 }
 
-function downloadQR(){
+function generateQR() {
+  const text = document.getElementById('qr-input').value.trim();
+  const out   = document.getElementById('qr-output');
+  const ph    = document.getElementById('qr-placeholder');
 
-const img =
-document.querySelector("#qrResult img");
+  if (!text) {
+    ph.style.display = '';
+    out.innerHTML = '';
+    qrInstance = null;
+    return;
+  }
 
-if(!img){
-
-alert("Generate QR first");
-
-return;
+  ph.style.display = 'none';
+  out.innerHTML = '';
+  qrInstance = new QRCode(out, {
+    text,
+    width: 200,
+    height: 200,
+    colorDark: '#1a1d27',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
 }
 
-const link =
-document.createElement("a");
-
-link.href = img.src;
-
-link.download = "developer-os-qr.png";
-
-link.click();
-
+function downloadQR() {
+  const canvas = document.querySelector('#qr-output canvas');
+  if (!canvas) { showToast('⚠ Generate a QR code first!'); return; }
+  const a = document.createElement('a');
+  a.download = 'qrcode.png';
+  a.href = canvas.toDataURL();
+  a.click();
+  showToast('⬇ Downloading…');
 }
-
 </script>
-
 </body>
 </html>
