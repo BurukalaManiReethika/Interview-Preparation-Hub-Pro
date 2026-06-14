@@ -1,0 +1,150 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base64 Encoder Decoder | Developer OS</title>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="tool-container">
+
+<a href="../index.html" class="back-btn">
+⬅ Back
+</a>
+
+<h2>🔐 Base64 Encoder / Decoder</h2>
+
+<textarea
+id="inputText"
+rows="8"
+placeholder="Enter text or Base64 string..."
+></textarea>
+
+<button onclick="encodeText()">
+🔒 Encode
+</button>
+
+<button onclick="decodeText()">
+🔓 Decode
+</button>
+
+<button onclick="copyResult()">
+📋 Copy Result
+</button>
+
+<textarea
+id="outputText"
+rows="8"
+placeholder="Result appears here..."
+readonly
+></textarea>
+
+<div
+id="status"
+class="result"
+>
+Ready...
+</div>
+
+</div>
+
+<script>
+
+function encodeText(){
+
+const input =
+document.getElementById(
+"inputText"
+).value;
+
+try{
+
+const encoded =
+btoa(input);
+
+document.getElementById(
+"outputText"
+).value =
+encoded;
+
+document.getElementById(
+"status"
+).innerHTML =
+"✅ Encoded Successfully";
+
+}
+catch(error){
+
+document.getElementById(
+"status"
+).innerHTML =
+"❌ Encoding Failed";
+
+}
+
+}
+
+function decodeText(){
+
+const input =
+document.getElementById(
+"inputText"
+).value;
+
+try{
+
+const decoded =
+atob(input);
+
+document.getElementById(
+"outputText"
+).value =
+decoded;
+
+document.getElementById(
+"status"
+).innerHTML =
+"✅ Decoded Successfully";
+
+}
+catch(error){
+
+document.getElementById(
+"status"
+).innerHTML =
+"❌ Invalid Base64 String";
+
+}
+
+}
+
+function copyResult(){
+
+const output =
+document.getElementById(
+"outputText"
+);
+
+if(output.value === ""){
+
+alert("Nothing to copy");
+
+return;
+
+}
+
+navigator.clipboard.writeText(
+output.value
+);
+
+alert("Copied Successfully!");
+
+}
+
+</script>
+
+</body>
+</html>
