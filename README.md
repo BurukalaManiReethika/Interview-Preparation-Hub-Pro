@@ -2,7 +2,7 @@
 
 > All Developer Tools In One Place — no install, no signup, just open and use.
 
-**Live site:** [interview-preparation-hub-pro.vercel.app](https://interview-preparation-hub-pro.vercel.app)
+**Live site:** https://interview-preparation-hub-pro.vercel.app/
 
 ---
 
