@@ -1,0 +1,84 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Markdown Previewer | Developer OS</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<style>
+.preview{
+    margin-top:20px;
+    padding:20px;
+    border-radius:10px;
+    background:rgba(255,255,255,.08);
+    min-height:200px;
+    overflow:auto;
+}
+</style>
+
+</head>
+<body>
+
+<div class="tool-container">
+
+<a href="../index.html" class="back-btn">
+⬅ Back
+</a>
+
+<h2>📝 Markdown Previewer</h2>
+
+<textarea
+id="markdownInput"
+rows="12"
+placeholder="# Welcome
+
+## Type Markdown Here
+
+**Bold Text**
+
+*Italic Text*
+
+- Item 1
+- Item 2
+
+```js
+console.log('Hello');
+```"
+onkeyup="updatePreview()"
+></textarea>
+
+<div
+id="preview"
+class="preview"
+>
+Live Preview Appears Here...
+</div>
+
+</div>
+
+<script>
+
+function updatePreview(){
+
+const markdown =
+document.getElementById(
+"markdownInput"
+).value;
+
+document.getElementById(
+"preview"
+).innerHTML =
+marked.parse(markdown);
+
+}
+
+updatePreview();
+
+</script>
+
+</body>
+</html>
