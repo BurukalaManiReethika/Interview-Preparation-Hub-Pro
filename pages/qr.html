@@ -1,0 +1,105 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Generator | Developer OS</title>
+
+<link rel="stylesheet" href="../style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+<div class="tool-container">
+
+<a href="../index.html" class="back-btn">
+⬅ Back
+</a>
+
+<h2>📱 QR Code Generator</h2>
+
+<input
+type="text"
+id="qrText"
+placeholder="Enter text or URL"
+>
+
+<button onclick="generateQR()">
+Generate QR Code
+</button>
+
+<div
+id="qrResult"
+class="result"
+style="text-align:center;"
+></div>
+
+<button
+id="downloadBtn"
+style="display:none;"
+onclick="downloadQR()"
+>
+⬇ Download QR
+</button>
+
+</div>
+
+<script>
+
+function generateQR(){
+
+const text =
+document.getElementById("qrText").value;
+
+const qrBox =
+document.getElementById("qrResult");
+
+if(text.trim() === ""){
+
+alert("Enter text or URL");
+
+return;
+}
+
+qrBox.innerHTML = "";
+
+new QRCode(qrBox,{
+text:text,
+width:250,
+height:250
+});
+
+document.getElementById(
+"downloadBtn"
+).style.display = "block";
+
+}
+
+function downloadQR(){
+
+const img =
+document.querySelector("#qrResult img");
+
+if(!img){
+
+alert("Generate QR first");
+
+return;
+}
+
+const link =
+document.createElement("a");
+
+link.href = img.src;
+
+link.download = "developer-os-qr.png";
+
+link.click();
+
+}
+
+</script>
+
+</body>
+</html>
