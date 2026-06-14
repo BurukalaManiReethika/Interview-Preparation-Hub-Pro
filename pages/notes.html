@@ -1,0 +1,123 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes App | Developer OS</title>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="tool-container">
+
+<a href="../index.html" class="back-btn">
+⬅ Back
+</a>
+
+<h2>📝 Notes App</h2>
+
+<textarea
+id="noteInput"
+rows="6"
+placeholder="Write your note here..."
+></textarea>
+
+<button onclick="saveNote()">
+💾 Save Note
+</button>
+
+<div id="notesList"></div>
+
+</div>
+
+<script>
+
+let notes =
+JSON.parse(
+localStorage.getItem("developerNotes")
+) || [];
+
+function renderNotes(){
+
+const notesList =
+document.getElementById("notesList");
+
+notesList.innerHTML = "";
+
+if(notes.length === 0){
+
+notesList.innerHTML =
+"<div class='result'>No notes found.</div>";
+
+return;
+}
+
+notes.forEach((note,index)=>{
+
+const div =
+document.createElement("div");
+
+div.className = "result";
+
+div.innerHTML = `
+<p>${note}</p>
+<br>
+<button onclick="deleteNote(${index})">
+🗑 Delete
+</button>
+`;
+
+notesList.appendChild(div);
+
+});
+
+}
+
+function saveNote(){
+
+const input =
+document.getElementById("noteInput");
+
+const text =
+input.value.trim();
+
+if(text === ""){
+
+alert("Enter a note");
+
+return;
+}
+
+notes.push(text);
+
+localStorage.setItem(
+"developerNotes",
+JSON.stringify(notes)
+);
+
+input.value = "";
+
+renderNotes();
+
+}
+
+function deleteNote(index){
+
+notes.splice(index,1);
+
+localStorage.setItem(
+"developerNotes",
+JSON.stringify(notes)
+);
+
+renderNotes();
+
+}
+
+renderNotes();
+
+</script>
+
+</body>
+</html>
