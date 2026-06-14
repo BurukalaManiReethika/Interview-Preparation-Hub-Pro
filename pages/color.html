@@ -1,0 +1,96 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Palette Generator | Developer OS</title>
+
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="tool-container">
+
+<a href="../index.html" class="back-btn">
+⬅ Back
+</a>
+
+<h2>🎨 Color Palette Generator</h2>
+
+<div
+id="colorBox"
+style="
+height:200px;
+border-radius:15px;
+margin-bottom:20px;
+background:#3498db;
+">
+</div>
+
+<input
+type="text"
+id="colorCode"
+readonly
+value="#3498db"
+>
+
+<button onclick="generateColor()">
+🎲 Generate Random Color
+</button>
+
+<button onclick="copyColor()">
+📋 Copy HEX Code
+</button>
+
+</div>
+
+<script>
+
+function generateColor(){
+
+const letters =
+"0123456789ABCDEF";
+
+let color = "#";
+
+for(let i=0;i<6;i++){
+
+color += letters[
+Math.floor(
+Math.random()*16
+)
+];
+
+}
+
+document.getElementById(
+"colorBox"
+).style.background = color;
+
+document.getElementById(
+"colorCode"
+).value = color;
+
+}
+
+function copyColor(){
+
+const code =
+document.getElementById(
+"colorCode"
+);
+
+navigator.clipboard.writeText(
+code.value
+);
+
+alert(
+"HEX Code Copied!"
+);
+
+}
+
+</script>
+
+</body>
+</html>
