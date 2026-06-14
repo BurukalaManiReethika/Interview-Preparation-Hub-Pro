@@ -1,84 +1,68 @@
 
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Markdown Previewer | Developer OS</title>
-
-<link rel="stylesheet" href="../style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-<style>
-.preview{
-    margin-top:20px;
-    padding:20px;
-    border-radius:10px;
-    background:rgba(255,255,255,.08);
-    min-height:200px;
-    overflow:auto;
-}
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Previewer | Developer OS</title>
+  <link rel="stylesheet" href="../style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
-<div class="tool-container">
+  <div id="toast" class="toast">✓ Copied!</div>
 
-<a href="../index.html" class="back-btn">
-⬅ Back
-</a>
+  <div class="tool-page md-page">
+    <a href="../index.html" class="back-btn">← Back to tools</a>
+    <div class="row-between" style="margin-bottom:16px">
+      <div class="tool-title" style="margin:0">✍️ Markdown Previewer</div>
+      <div class="row" style="gap:8px">
+        <button class="btn btn-secondary btn-sm" onclick="copyMarkdown()">📋 Copy MD</button>
+        <button class="btn btn-secondary btn-sm" onclick="clearMarkdown()">🗑 Clear</button>
+      </div>
+    </div>
 
-<h2>📝 Markdown Previewer</h2>
-
-<textarea
-id="markdownInput"
-rows="12"
-placeholder="# Welcome
-
-## Type Markdown Here
-
-**Bold Text**
-
-*Italic Text*
-
-- Item 1
-- Item 2
-
-```js
-console.log('Hello');
-```"
-onkeyup="updatePreview()"
-></textarea>
-
-<div
-id="preview"
-class="preview"
->
-Live Preview Appears Here...
-</div>
-
-</div>
+    <div class="md-split">
+      <div>
+        <label>Markdown Input</label>
+        <textarea class="json-textarea" id="md-input" style="min-height:360px"
+          placeholder="# Hello World&#10;&#10;Write **bold**, *italic*, `code` here…&#10;&#10;- Item one&#10;- Item two"
+          oninput="renderMarkdown()"></textarea>
+      </div>
+      <div>
+        <label>Live Preview</label>
+        <div id="md-preview" class="md-preview">
+          <em style="color:var(--muted)">Preview appears here…</em>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script>
-
-function updatePreview(){
-
-const markdown =
-document.getElementById(
-"markdownInput"
-).value;
-
-document.getElementById(
-"preview"
-).innerHTML =
-marked.parse(markdown);
-
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
-updatePreview();
+function renderMarkdown() {
+  const input = document.getElementById('md-input').value;
+  document.getElementById('md-preview').innerHTML = input
+    ? marked.parse(input)
+    : '<em style="color:var(--muted)">Preview appears here…</em>';
+}
 
+function copyMarkdown() {
+  const val = document.getElementById('md-input').value;
+  if (val) navigator.clipboard.writeText(val).then(() => showToast('✓ Markdown copied!'));
+  else showToast('⚠ Nothing to copy');
+}
+
+function clearMarkdown() {
+  document.getElementById('md-input').value = '';
+  renderMarkdown();
+}
 </script>
-
 </body>
 </html>
