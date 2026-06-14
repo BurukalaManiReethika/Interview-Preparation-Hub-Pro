@@ -1,247 +1,91 @@
 
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSON Formatter | Developer OS</title>
-
-<link rel="stylesheet" href="../style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Formatter | Developer OS</title>
+  <link rel="stylesheet" href="../style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="tool-container">
+  <div id="toast" class="toast">✓ Copied!</div>
 
-<a href="../index.html" class="back-btn">
-⬅ Back
-</a>
+  <div class="tool-page">
+    <a href="../index.html" class="back-btn">← Back to tools</a>
+    <div class="tool-title">📄 JSON Formatter Pro</div>
 
-<h2>📄 JSON Formatter Pro</h2>
+    <div class="row mb-12" style="gap:8px">
+      <button class="btn btn-primary"   onclick="beautifyJSON()">✨ Beautify</button>
+      <button class="btn btn-secondary" onclick="minifyJSON()">📦 Minify</button>
+      <button class="btn btn-secondary" onclick="validateJSON()">✅ Validate</button>
+      <button class="btn btn-secondary" onclick="clearJSON()">🗑 Clear</button>
+      <span id="json-status" class="status-badge status-idle">Ready</span>
+    </div>
 
-<textarea
-id="jsonInput"
-rows="10"
-placeholder='Paste JSON here...'
-></textarea>
-
-<button onclick="formatJSON()">
-✨ Beautify JSON
-</button>
-
-<button onclick="minifyJSON()">
-📦 Minify JSON
-</button>
-
-<button onclick="validateJSON()">
-✅ Validate JSON
-</button>
-
-<button onclick="copyOutput()">
-📋 Copy Output
-</button>
-
-<textarea
-id="jsonOutput"
-rows="10"
-placeholder="Result will appear here..."
-readonly
-></textarea>
-
-<div
-id="status"
-class="result"
->
-Ready...
-</div>
-
-</div>
+    <div class="json-split">
+      <div>
+        <label>Input JSON</label>
+        <textarea class="json-textarea" id="json-input" placeholder='{"key": "value"}'></textarea>
+      </div>
+      <div>
+        <div class="row-between mb-12" style="margin-bottom:6px">
+          <label style="margin:0">Output</label>
+          <button class="btn btn-secondary btn-sm" onclick="copyJSON()">📋 Copy</button>
+        </div>
+        <textarea class="json-textarea" id="json-output" readonly placeholder="Output appears here…"></textarea>
+      </div>
+    </div>
+  </div>
 
 <script>
-
-function formatJSON(){
-
-const input<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JSON Formatter | Developer OS</title>
-
-<link rel="stylesheet" href="../style.css">
-</head>
-<body>
-
-<div class="tool-container">
-
-<a href="../index.html" class="back-btn">
-⬅ Back
-</a>
-
-<h2>📄 JSON Formatter Pro</h2>
-
-<textarea
-id="jsonInput"
-rows="10"
-placeholder='Paste JSON here...'
-></textarea>
-
-<button onclick="formatJSON()">
-✨ Beautify JSON
-</button>
-
-<button onclick="minifyJSON()">
-📦 Minify JSON
-</button>
-
-<button onclick="validateJSON()">
-✅ Validate JSON
-</button>
-
-<button onclick="copyOutput()">
-📋 Copy Output
-</button>
-
-<textarea
-id="jsonOutput"
-rows="10"
-placeholder="Result will appear here..."
-readonly
-></textarea>
-
-<div
-id="status"
-class="result"
->
-Ready...
-</div>
-
-</div>
-
-<script>
-
-function formatJSON(){
-
-const input =
-document.getElementById("jsonInput").value;
-
-try{
-
-const parsed =
-JSON.parse(input);
-
-const formatted =
-JSON.stringify(
-parsed,
-null,
-4
-);
-
-document.getElementById(
-"jsonOutput"
-).value = formatted;
-
-document.getElementById(
-"status"
-).innerHTML =
-"✅ JSON formatted successfully";
-
-}
-catch(error){
-
-document.getElementById(
-"status"
-).innerHTML =
-"❌ Invalid JSON";
-
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
+function setStatus(text, type) {
+  const el = document.getElementById('json-status');
+  el.textContent = text;
+  el.className = 'status-badge status-' + type;
 }
 
-function minifyJSON(){
-
-const input =
-document.getElementById("jsonInput").value;
-
-try{
-
-const parsed =
-JSON.parse(input);
-
-document.getElementById(
-"jsonOutput"
-).value =
-JSON.stringify(parsed);
-
-document.getElementById(
-"status"
-).innerHTML =
-"✅ JSON minified successfully";
-
-}
-catch(error){
-
-document.getElementById(
-"status"
-).innerHTML =
-"❌ Invalid JSON";
-
+function beautifyJSON() {
+  try {
+    const parsed = JSON.parse(document.getElementById('json-input').value);
+    document.getElementById('json-output').value = JSON.stringify(parsed, null, 2);
+    setStatus('✓ Valid JSON', 'ok');
+  } catch (e) { setStatus('✗ ' + e.message, 'err'); }
 }
 
+function minifyJSON() {
+  try {
+    const parsed = JSON.parse(document.getElementById('json-input').value);
+    document.getElementById('json-output').value = JSON.stringify(parsed);
+    setStatus('✓ Minified', 'ok');
+  } catch (e) { setStatus('✗ ' + e.message, 'err'); }
 }
 
-function validateJSON(){
-
-const input =
-document.getElementById("jsonInput").value;
-
-try{
-
-JSON.parse(input);
-
-document.getElementById(
-"status"
-).innerHTML =
-"✅ Valid JSON";
-
-}
-catch(error){
-
-document.getElementById(
-"status"
-).innerHTML =
-"❌ Invalid JSON : " +
-error.message;
-
+function validateJSON() {
+  try {
+    JSON.parse(document.getElementById('json-input').value);
+    setStatus('✓ Valid JSON', 'ok');
+  } catch (e) { setStatus('✗ ' + e.message, 'err'); }
 }
 
+function clearJSON() {
+  document.getElementById('json-input').value  = '';
+  document.getElementById('json-output').value = '';
+  setStatus('Ready', 'idle');
 }
 
-function copyOutput(){
-
-const output =
-document.getElementById(
-"jsonOutput"
-);
-
-if(output.value === ""){
-
-alert(
-"No output available"
-);
-
-return;
+function copyJSON() {
+  const out = document.getElementById('json-output').value;
+  if (out) navigator.clipboard.writeText(out).then(() => showToast('✓ Copied!'));
+  else showToast('⚠ Nothing to copy');
 }
-
-navigator.clipboard.writeText(
-output.value
-);
-
-alert(
-"Copied to clipboard!"
-);
-
-}
-
 </script>
-
 </body>
 </html>
