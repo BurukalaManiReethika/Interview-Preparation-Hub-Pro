@@ -1,0 +1,58 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>UUID Generator | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .uuid-list { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+    .uuid-row { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+    .uuid-val { font-family:'JetBrains Mono',monospace; font-size:0.85rem; flex:1; word-break:break-all; }
+    .copy-btn { background:none; border:1px solid var(--border); color:var(--muted); border-radius:6px; padding:4px 10px; cursor:pointer; font-size:0.75rem; transition:border-color 0.15s,color 0.15s; }
+    .copy-btn:hover { border-color:var(--accent); color:var(--text); }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">🆔 UUID Generator</span>
+</div>
+<div class="container">
+  <div class="flex mb">
+    <div>
+      <label>Count</label>
+      <input type="number" id="count" value="5" min="1" max="50" style="width:90px">
+    </div>
+    <div style="align-self:flex-end">
+      <button class="btn btn-primary" onclick="generate()">Generate UUIDs</button>
+    </div>
+    <div style="align-self:flex-end">
+      <button class="btn btn-secondary" onclick="copyAll()">📋 Copy All</button>
+    </div>
+  </div>
+  <div class="uuid-list" id="list"></div>
+</div>
+<div class="toast" id="toast">Copied!</div>
+<script>
+  function uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
+  }
+  function generate() {
+    const n = Math.min(50, parseInt(document.getElementById('count').value)||1);
+    const list = document.getElementById('list');
+    list.innerHTML = '';
+    for(let i=0;i<n;i++) {
+      const u = uuidv4();
+      list.innerHTML += `<div class="uuid-row"><span class="uuid-val">${u}</span><button class="copy-btn" onclick="copyOne('${u}',this)">Copy</button></div>`;
+    }
+  }
+  function copyOne(u,btn) { navigator.clipboard.writeText(u).then(()=>{ btn.textContent='✓'; setTimeout(()=>btn.textContent='Copy',1500); }); }
+  function copyAll() {
+    const all = [...document.querySelectorAll('.uuid-val')].map(el=>el.textContent).join('\n');
+    navigator.clipboard.writeText(all).then(()=>toast());
+  }
+  function toast() { const t=document.getElementById('toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+  generate();
+</script>
+</body></html>
