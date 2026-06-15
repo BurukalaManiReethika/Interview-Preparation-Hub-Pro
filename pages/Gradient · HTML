@@ -1,0 +1,82 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gradient Maker | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .preview { width:100%;height:160px;border-radius:14px;border:1px solid var(--border);margin-bottom:24px;transition:background 0.2s; }
+    .controls { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; margin-bottom:20px; }
+    .color-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
+    .color-row input[type=color] { width:44px; height:38px; border-radius:6px; border:1px solid var(--border); padding:2px; cursor:pointer; background:none; }
+    .css-out { font-family:'JetBrains Mono',monospace; font-size:0.82rem; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px; margin-top:16px; word-break:break-all; }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">🌈 CSS Gradient Maker</span>
+</div>
+<div class="container">
+  <div class="preview" id="preview"></div>
+  <div class="controls">
+    <div>
+      <label>Type</label>
+      <select id="type" onchange="update()">
+        <option value="linear">Linear</option>
+        <option value="radial">Radial</option>
+      </select>
+    </div>
+    <div id="angle-wrap">
+      <label>Angle: <span id="angle-val">135</span>°</label>
+      <input type="range" id="angle" min="0" max="360" value="135" oninput="update()" style="width:100%;accent-color:var(--accent)">
+    </div>
+  </div>
+  <label>Colors</label>
+  <div class="color-row">
+    <input type="color" id="c1" value="#6c63ff" oninput="update()">
+    <input type="text" id="c1t" value="#6c63ff" oninput="syncColor('c1','c1t')" style="width:110px">
+  </div>
+  <div class="color-row">
+    <input type="color" id="c2" value="#00d9a6" oninput="update()">
+    <input type="text" id="c2t" value="#00d9a6" oninput="syncColor('c2','c2t')" style="width:110px">
+  </div>
+  <div class="color-row">
+    <input type="color" id="c3" value="#ff5e7a" oninput="update()">
+    <input type="text" id="c3t" value="#ff5e7a" oninput="syncColor('c3','c3t')" style="width:110px">
+    <label style="margin:0"><input type="checkbox" id="use3" onchange="update()"> Use 3rd color</label>
+  </div>
+  <div class="flex mt">
+    <button class="btn btn-secondary" onclick="copy()">📋 Copy CSS</button>
+  </div>
+  <div class="css-out" id="css-out"></div>
+</div>
+<div class="toast" id="toast">Copied!</div>
+<script>
+  function update(){
+    const type=document.getElementById('type').value;
+    const angle=document.getElementById('angle').value;
+    document.getElementById('angle-val').textContent=angle;
+    document.getElementById('angle-wrap').style.opacity=type==='linear'?'1':'0.3';
+    const c1=document.getElementById('c1').value;
+    const c2=document.getElementById('c2').value;
+    const c3=document.getElementById('c3').value;
+    const use3=document.getElementById('use3').checked;
+    document.getElementById('c1t').value=c1;
+    document.getElementById('c2t').value=c2;
+    document.getElementById('c3t').value=c3;
+    const stops=use3?`${c1}, ${c2}, ${c3}`:`${c1}, ${c2}`;
+    const css=type==='linear'?`linear-gradient(${angle}deg, ${stops})`:`radial-gradient(circle, ${stops})`;
+    document.getElementById('preview').style.background=css;
+    document.getElementById('css-out').textContent=`background: ${css};`;
+  }
+  function syncColor(picId,txtId){
+    const v=document.getElementById(txtId).value;
+    if(/^#[0-9a-f]{6}$/i.test(v)){document.getElementById(picId).value=v;}
+    update();
+  }
+  function copy(){navigator.clipboard.writeText(document.getElementById('css-out').textContent).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);});}
+  update();
+</script>
+</body></html>
