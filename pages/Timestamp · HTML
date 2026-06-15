@@ -1,0 +1,75 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Timestamp Converter | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .current { font-family:'JetBrains Mono',monospace; font-size:1.5rem; font-weight:700; color:var(--accent); margin-bottom:4px; }
+    .section-box { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:16px; }
+    .result-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.85rem; }
+    .result-row:last-child { border:none; }
+    .result-label { color:var(--muted); }
+    .result-val { font-family:'JetBrains Mono',monospace; }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">⏱️ Timestamp Converter</span>
+</div>
+<div class="container">
+  <div class="section-box" style="text-align:center">
+    <div style="color:var(--muted);font-size:0.8rem;margin-bottom:4px">Current Unix Timestamp</div>
+    <div class="current" id="now"></div>
+    <div style="color:var(--muted);font-size:0.78rem" id="now-human"></div>
+  </div>
+  <div class="section-box">
+    <label>Unix Timestamp → Human Date</label>
+    <div class="flex mt">
+      <input type="number" id="ts-in" placeholder="e.g. 1700000000" style="flex:1">
+      <button class="btn btn-primary" onclick="tsToDate()">Convert</button>
+    </div>
+    <div id="ts-result" style="margin-top:14px"></div>
+  </div>
+  <div class="section-box">
+    <label>Human Date → Unix Timestamp</label>
+    <div class="flex mt">
+      <input type="datetime-local" id="date-in" style="flex:1">
+      <button class="btn btn-primary" onclick="dateToTs()">Convert</button>
+    </div>
+    <div id="date-result" style="margin-top:14px"></div>
+  </div>
+</div>
+<div class="toast" id="toast">Copied!</div>
+<script>
+  function tick(){const now=Math.floor(Date.now()/1000);document.getElementById('now').textContent=now;document.getElementById('now-human').textContent=new Date().toUTCString();}
+  setInterval(tick,1000);tick();
+
+  function tsToDate(){
+    const ts=+document.getElementById('ts-in').value;
+    if(!ts){return;}
+    const ms=ts>9999999999?ts:ts*1000;
+    const d=new Date(ms);
+    const el=document.getElementById('ts-result');
+    el.innerHTML=`
+      <div class="result-row"><span class="result-label">Local</span><span class="result-val">${d.toLocaleString()}</span></div>
+      <div class="result-row"><span class="result-label">UTC</span><span class="result-val">${d.toUTCString()}</span></div>
+      <div class="result-row"><span class="result-label">ISO 8601</span><span class="result-val">${d.toISOString()}</span></div>
+      <div class="result-row"><span class="result-label">Relative</span><span class="result-val">${relative(d)}</span></div>
+    `;
+  }
+  function dateToTs(){
+    const v=document.getElementById('date-in').value;
+    if(!v)return;
+    const d=new Date(v);
+    const ts=Math.floor(d.getTime()/1000);
+    document.getElementById('date-result').innerHTML=`
+      <div class="result-row"><span class="result-label">Unix (seconds)</span><span class="result-val">${ts}</span></div>
+      <div class="result-row"><span class="result-label">Unix (ms)</span><span class="result-val">${ts*1000}</span></div>
+    `;
+  }
+  function relative(d){const s=Math.round((Date.now()-d)/1000);const a=Math.abs(s);if(a<60)return s<0?`in ${a}s`:`${a}s ago`;if(a<3600)return s<0?`in ${Math.round(a/60)}m`:`${Math.round(a/60)}m ago`;if(a<86400)return s<0?`in ${Math.round(a/3600)}h`:`${Math.round(a/3600)}h ago`;return s<0?`in ${Math.round(a/86400)}d`:`${Math.round(a/86400)}d ago`;}
+</script>
+</body></html>
