@@ -1,0 +1,53 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lorem Ipsum | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">📜 Lorem Ipsum Generator</span>
+</div>
+<div class="container">
+  <div class="row mb">
+    <div class="col">
+      <label>Type</label>
+      <select id="type">
+        <option value="paragraphs">Paragraphs</option>
+        <option value="sentences">Sentences</option>
+        <option value="words">Words</option>
+      </select>
+    </div>
+    <div class="col">
+      <label>Count</label>
+      <input type="number" id="count" value="3" min="1" max="50">
+    </div>
+  </div>
+  <div class="flex mb">
+    <button class="btn btn-primary" onclick="generate()">Generate</button>
+    <button class="btn btn-secondary" onclick="copy()">📋 Copy</button>
+  </div>
+  <div class="output-box" id="out" style="min-height:180px;white-space:pre-wrap"></div>
+</div>
+<div class="toast" id="toast">Copied!</div>
+<script>
+const WORDS=['lorem','ipsum','dolor','sit','amet','consectetur','adipiscing','elit','sed','do','eiusmod','tempor','incididunt','ut','labore','et','dolore','magna','aliqua','enim','ad','minim','veniam','quis','nostrud','exercitation','ullamco','laboris','nisi','aliquip','ex','ea','commodo','consequat','duis','aute','irure','in','reprehenderit','voluptate','velit','esse','cillum','fugiat','nulla','pariatur','excepteur','sint','occaecat','cupidatat','non','proident','sunt','culpa','qui','officia','deserunt','mollit','anim','id','est','laborum'];
+function rw(){return WORDS[Math.floor(Math.random()*WORDS.length)];}
+function sentence(){const n=8+Math.floor(Math.random()*10);const w=[rw().charAt(0).toUpperCase()+rw().slice(1),...Array.from({length:n-1},rw)];return w.join(' ')+'.';}
+function paragraph(){return Array.from({length:4+Math.floor(Math.random()*3)},sentence).join(' ');}
+function generate(){
+  const type=document.getElementById('type').value;
+  const n=Math.min(50,parseInt(document.getElementById('count').value)||1);
+  let out='';
+  if(type==='words'){out=Array.from({length:n},rw).join(' ');}
+  else if(type==='sentences'){out=Array.from({length:n},sentence).join(' ');}
+  else{out=Array.from({length:n},paragraph).join('\n\n');}
+  document.getElementById('out').textContent=out;
+}
+function copy(){navigator.clipboard.writeText(document.getElementById('out').textContent).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);});}
+generate();
+</script>
+</body></html>
