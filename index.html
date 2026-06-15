@@ -3,45 +3,352 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Developer OS</title>
+  <title>Developer OS – All Tools</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <header>
-    <h1>🚀 Developer OS</h1>
-    <p>All Developer Tools In One Place</p>
+    <div class="header-inner">
+      <h1>🚀 Developer OS</h1>
+      <p>All Developer Tools In One Place</p>
+      <div class="stats-bar">
+        <span>⚡ 30+ Tools</span>
+        <span>🆓 Free Forever</span>
+        <span>🔒 No Login</span>
+        <span>📱 Works Offline</span>
+      </div>
+    </div>
   </header>
 
-  <div style="text-align:center; margin-bottom:40px;">
-    <h2>50+ Developer Utilities In One Place</h2>
+  <!-- Search Bar -->
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="🔍 Search tools..." oninput="filterTools()" />
   </div>
 
-  <section class="tools">
-    <a href="pages/password.html" class="card">
-      🔐 Password Generator
-    </a>
-    <a href="pages/qr.html" class="card">
-      📱 QR Generator
-    </a>
-    <a href="pages/json.html" class="card">
-      📄 JSON Formatter
-    </a>
-    <a href="pages/notes.html" class="card">
-      📝 Notes App
-    </a>
-    <a href="pages/color.html" class="card">
-      🎨 Color Palette
-    </a>
-    <a href="pages/markdown.html" class="card">
-      📝 Markdown Previewer
-    </a>
+  <!-- Category Filter -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterCategory('all', this)">All</button>
+    <button class="filter-btn" onclick="filterCategory('text', this)">📝 Text</button>
+    <button class="filter-btn" onclick="filterCategory('dev', this)">💻 Dev</button>
+    <button class="filter-btn" onclick="filterCategory('convert', this)">🔄 Convert</button>
+    <button class="filter-btn" onclick="filterCategory('security', this)">🔐 Security</button>
+    <button class="filter-btn" onclick="filterCategory('interview', this)">🎯 Interview</button>
+    <button class="filter-btn" onclick="filterCategory('math', this)">🧮 Math</button>
+    <button class="filter-btn" onclick="filterCategory('misc', this)">🎨 Misc</button>
+  </div>
+
+  <!-- TEXT TOOLS -->
+  <section class="category-section" data-cat="text">
+    <h2 class="cat-title">📝 Text Tools</h2>
+    <div class="tools-grid">
+      <a href="pages/notes.html" class="card" data-name="notes app write save">
+        <span class="card-icon">📝</span>
+        <span class="card-label">Notes App</span>
+        <span class="card-desc">Write &amp; save notes</span>
+      </a>
+      <a href="pages/markdown.html" class="card" data-name="markdown previewer live md">
+        <span class="card-icon">📄</span>
+        <span class="card-label">Markdown Previewer</span>
+        <span class="card-desc">Live MD preview</span>
+      </a>
+      <a href="pages/word-counter.html" class="card" data-name="word counter character count lines">
+        <span class="card-icon">🔢</span>
+        <span class="card-label">Word Counter</span>
+        <span class="card-desc">Words, chars, lines</span>
+      </a>
+      <a href="pages/text-case.html" class="card" data-name="text case converter uppercase lowercase camelcase">
+        <span class="card-icon">🔤</span>
+        <span class="card-label">Case Converter</span>
+        <span class="card-desc">UPPER / lower / camelCase</span>
+      </a>
+      <a href="pages/diff.html" class="card" data-name="text diff compare difference">
+        <span class="card-icon">🔍</span>
+        <span class="card-label">Text Diff</span>
+        <span class="card-desc">Compare two texts</span>
+      </a>
+      <a href="pages/lorem.html" class="card" data-name="lorem ipsum placeholder text generator">
+        <span class="card-icon">📃</span>
+        <span class="card-label">Lorem Generator</span>
+        <span class="card-desc">Placeholder text</span>
+      </a>
+      <a href="pages/regex.html" class="card" data-name="regex tester regular expression pattern">
+        <span class="card-icon">🧪</span>
+        <span class="card-label">Regex Tester</span>
+        <span class="card-desc">Test regex patterns</span>
+      </a>
+      <a href="pages/find-replace.html" class="card" data-name="find replace bulk text">
+        <span class="card-icon">🔁</span>
+        <span class="card-label">Find &amp; Replace</span>
+        <span class="card-desc">Bulk text replace</span>
+      </a>
+    </div>
   </section>
 
+  <!-- DEV TOOLS -->
+  <section class="category-section" data-cat="dev">
+    <h2 class="cat-title">💻 Developer Tools</h2>
+    <div class="tools-grid">
+      <a href="pages/json.html" class="card" data-name="json formatter beautify validate">
+        <span class="card-icon">📋</span>
+        <span class="card-label">JSON Formatter</span>
+        <span class="card-desc">Format &amp; validate JSON</span>
+      </a>
+      <a href="pages/json-minify.html" class="card" data-name="json minify compress">
+        <span class="card-icon">📦</span>
+        <span class="card-label">JSON Minifier</span>
+        <span class="card-desc">Compress JSON</span>
+      </a>
+      <a href="pages/uuid.html" class="card" data-name="uuid generator unique id">
+        <span class="card-icon">🆔</span>
+        <span class="card-label">UUID Generator</span>
+        <span class="card-desc">Generate unique IDs</span>
+      </a>
+      <a href="pages/html-preview.html" class="card" data-name="html preview live editor">
+        <span class="card-icon">🌐</span>
+        <span class="card-label">HTML Preview</span>
+        <span class="card-desc">Live HTML editor</span>
+      </a>
+      <a href="pages/css-minify.html" class="card" data-name="css minifier compress">
+        <span class="card-icon">🎨</span>
+        <span class="card-label">CSS Minifier</span>
+        <span class="card-desc">Compress CSS code</span>
+      </a>
+      <a href="pages/js-minify.html" class="card" data-name="javascript minifier compress js">
+        <span class="card-icon">⚙️</span>
+        <span class="card-label">JS Minifier</span>
+        <span class="card-desc">Compress JavaScript</span>
+      </a>
+      <a href="pages/api-tester.html" class="card" data-name="api tester http request rest get post">
+        <span class="card-icon">📡</span>
+        <span class="card-label">API Tester</span>
+        <span class="card-desc">Test HTTP requests</span>
+      </a>
+      <a href="pages/cron.html" class="card" data-name="cron expression parser scheduler">
+        <span class="card-icon">⏱️</span>
+        <span class="card-label">Cron Parser</span>
+        <span class="card-desc">Read cron expressions</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONVERT TOOLS -->
+  <section class="category-section" data-cat="convert">
+    <h2 class="cat-title">🔄 Converters</h2>
+    <div class="tools-grid">
+      <a href="pages/base64.html" class="card" data-name="base64 encode decode convert">
+        <span class="card-icon">🔐</span>
+        <span class="card-label">Base64</span>
+        <span class="card-desc">Encode / Decode</span>
+      </a>
+      <a href="pages/url-encode.html" class="card" data-name="url encode decode percent encoding">
+        <span class="card-icon">🔗</span>
+        <span class="card-label">URL Encoder</span>
+        <span class="card-desc">Encode/decode URLs</span>
+      </a>
+      <a href="pages/html-encode.html" class="card" data-name="html entity encode decode">
+        <span class="card-icon">🏷️</span>
+        <span class="card-label">HTML Encoder</span>
+        <span class="card-desc">Encode HTML entities</span>
+      </a>
+      <a href="pages/color.html" class="card" data-name="color palette converter hex rgb hsl">
+        <span class="card-icon">🎨</span>
+        <span class="card-label">Color Converter</span>
+        <span class="card-desc">HEX ↔ RGB ↔ HSL</span>
+      </a>
+      <a href="pages/unit.html" class="card" data-name="unit converter length weight temperature">
+        <span class="card-icon">📐</span>
+        <span class="card-label">Unit Converter</span>
+        <span class="card-desc">Length, weight, temp</span>
+      </a>
+      <a href="pages/timestamp.html" class="card" data-name="unix timestamp converter date time epoch">
+        <span class="card-icon">⏰</span>
+        <span class="card-label">Timestamp</span>
+        <span class="card-desc">Unix ↔ Date/Time</span>
+      </a>
+      <a href="pages/number-base.html" class="card" data-name="number base binary hex decimal octal converter">
+        <span class="card-icon">🔢</span>
+        <span class="card-label">Number Base</span>
+        <span class="card-desc">Binary/Hex/Decimal</span>
+      </a>
+      <a href="pages/csv-json.html" class="card" data-name="csv json converter table data">
+        <span class="card-icon">📊</span>
+        <span class="card-label">CSV ↔ JSON</span>
+        <span class="card-desc">Convert CSV to JSON</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SECURITY TOOLS -->
+  <section class="category-section" data-cat="security">
+    <h2 class="cat-title">🔐 Security Tools</h2>
+    <div class="tools-grid">
+      <a href="pages/password.html" class="card" data-name="password generator strong secure">
+        <span class="card-icon">🔑</span>
+        <span class="card-label">Password Generator</span>
+        <span class="card-desc">Strong passwords</span>
+      </a>
+      <a href="pages/hash.html" class="card" data-name="hash generator md5 sha256 sha512">
+        <span class="card-icon">🔏</span>
+        <span class="card-label">Hash Generator</span>
+        <span class="card-desc">MD5, SHA256, SHA512</span>
+      </a>
+      <a href="pages/jwt.html" class="card" data-name="jwt decoder json web token">
+        <span class="card-icon">🎫</span>
+        <span class="card-label">JWT Decoder</span>
+        <span class="card-desc">Decode JWT tokens</span>
+      </a>
+      <a href="pages/password-strength.html" class="card" data-name="password strength checker meter">
+        <span class="card-icon">💪</span>
+        <span class="card-label">Password Strength</span>
+        <span class="card-desc">Check password strength</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- INTERVIEW PREP -->
+  <section class="category-section" data-cat="interview">
+    <h2 class="cat-title">🎯 Interview Prep</h2>
+    <div class="tools-grid">
+      <a href="pages/timer.html" class="card" data-name="interview timer countdown practice">
+        <span class="card-icon">⏳</span>
+        <span class="card-label">Interview Timer</span>
+        <span class="card-desc">Countdown timer</span>
+      </a>
+      <a href="pages/flashcards.html" class="card" data-name="flashcards study dsa questions answers">
+        <span class="card-icon">🃏</span>
+        <span class="card-label">Flashcards</span>
+        <span class="card-desc">DSA Q&amp;A cards</span>
+      </a>
+      <a href="pages/cheatsheet.html" class="card" data-name="dsa cheatsheet big o complexity data structures">
+        <span class="card-icon">📜</span>
+        <span class="card-label">DSA Cheatsheet</span>
+        <span class="card-desc">Big-O, arrays, trees</span>
+      </a>
+      <a href="pages/snippets.html" class="card" data-name="code snippets templates interview boilerplate">
+        <span class="card-icon">💡</span>
+        <span class="card-label">Code Snippets</span>
+        <span class="card-desc">Quick copy templates</span>
+      </a>
+      <a href="pages/checklist.html" class="card" data-name="interview checklist preparation track progress">
+        <span class="card-icon">✅</span>
+        <span class="card-label">Prep Checklist</span>
+        <span class="card-desc">Track your progress</span>
+      </a>
+      <a href="pages/complexity.html" class="card" data-name="time space complexity calculator big o analysis">
+        <span class="card-icon">📈</span>
+        <span class="card-label">Complexity Calc</span>
+        <span class="card-desc">Time &amp; space analysis</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- MATH TOOLS -->
+  <section class="category-section" data-cat="math">
+    <h2 class="cat-title">🧮 Math &amp; Calculators</h2>
+    <div class="tools-grid">
+      <a href="pages/calculator.html" class="card" data-name="calculator basic scientific math">
+        <span class="card-icon">🧮</span>
+        <span class="card-label">Calculator</span>
+        <span class="card-desc">Scientific calculator</span>
+      </a>
+      <a href="pages/percentage.html" class="card" data-name="percentage calculator percent">
+        <span class="card-icon">%</span>
+        <span class="card-label">Percentage Calc</span>
+        <span class="card-desc">Quick % calculations</span>
+      </a>
+      <a href="pages/age.html" class="card" data-name="age calculator date of birth dob">
+        <span class="card-icon">🎂</span>
+        <span class="card-label">Age Calculator</span>
+        <span class="card-desc">Calculate exact age</span>
+      </a>
+      <a href="pages/bmi.html" class="card" data-name="bmi calculator body mass index health">
+        <span class="card-icon">⚖️</span>
+        <span class="card-label">BMI Calculator</span>
+        <span class="card-desc">Body mass index</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- MISC TOOLS -->
+  <section class="category-section" data-cat="misc">
+    <h2 class="cat-title">🎨 Misc Tools</h2>
+    <div class="tools-grid">
+      <a href="pages/qr.html" class="card" data-name="qr code generator scan">
+        <span class="card-icon">📱</span>
+        <span class="card-label">QR Generator</span>
+        <span class="card-desc">Generate QR codes</span>
+      </a>
+      <a href="pages/pomodoro.html" class="card" data-name="pomodoro timer focus productivity work">
+        <span class="card-icon">🍅</span>
+        <span class="card-label">Pomodoro Timer</span>
+        <span class="card-desc">Focus work sessions</span>
+      </a>
+      <a href="pages/todo.html" class="card" data-name="todo list task manager organize">
+        <span class="card-icon">📌</span>
+        <span class="card-label">Todo List</span>
+        <span class="card-desc">Task manager</span>
+      </a>
+      <a href="pages/stopwatch.html" class="card" data-name="stopwatch timer lap track time">
+        <span class="card-icon">🏁</span>
+        <span class="card-label">Stopwatch</span>
+        <span class="card-desc">Lap timer</span>
+      </a>
+      <a href="pages/random.html" class="card" data-name="random number generator dice coin flip">
+        <span class="card-icon">🎲</span>
+        <span class="card-label">Random Generator</span>
+        <span class="card-desc">Numbers, dice, coin</span>
+      </a>
+      <a href="pages/emoji.html" class="card" data-name="emoji picker search copy paste">
+        <span class="card-icon">😊</span>
+        <span class="card-label">Emoji Picker</span>
+        <span class="card-desc">Find &amp; copy emoji</span>
+      </a>
+    </div>
+  </section>
+
+  <div id="no-results" style="display:none; text-align:center; padding:60px 20px; color:#6b7280;">
+    <p style="font-size:2rem;">🔍</p>
+    <p style="margin-top:12px; font-family:'Poppins',sans-serif;">No tools found. Try a different keyword.</p>
+  </div>
+
   <footer>
-    <p>Made with ❤️ by Mani</p>
+    <p>Made with ❤️ by Mani &nbsp;|&nbsp; 🚀 Developer OS &nbsp;|&nbsp; <span id="tool-count"></span> Tools</p>
   </footer>
+
+  <script>
+    document.getElementById('tool-count').textContent = document.querySelectorAll('.card').length;
+
+    function filterCategory(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('searchInput').value = '';
+      document.querySelectorAll('.category-section').forEach(sec => {
+        sec.style.display = (cat === 'all' || sec.dataset.cat === cat) ? 'block' : 'none';
+      });
+      document.querySelectorAll('.card').forEach(c => c.style.display = 'flex');
+      document.getElementById('no-results').style.display = 'none';
+    }
+
+    function filterTools() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.filter-btn').classList.add('active');
+      let anyVisible = false;
+      document.querySelectorAll('.category-section').forEach(section => {
+        let sectionHasVisible = false;
+        section.querySelectorAll('.card').forEach(card => {
+          const name = (card.dataset.name || '') + ' ' + (card.querySelector('.card-label')?.textContent || '');
+          const show = !query || name.toLowerCase().includes(query);
+          card.style.display = show ? 'flex' : 'none';
+          if (show) { sectionHasVisible = true; anyVisible = true; }
+        });
+        section.style.display = sectionHasVisible ? 'block' : 'none';
+      });
+      document.getElementById('no-results').style.display = anyVisible ? 'none' : 'block';
+    }
+  </script>
 
 </body>
 </html>
