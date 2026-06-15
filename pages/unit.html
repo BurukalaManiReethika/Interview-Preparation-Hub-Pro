@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Unit Converter – Developer OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Poppins',sans-serif;background:#0d0d1a;color:#e2e8f0;min-height:100vh}
+  a.back{display:inline-flex;align-items:center;gap:8px;color:#a5b4fc;text-decoration:none;font-size:.85rem;font-weight:500;margin-bottom:28px}
+  a.back:hover{color:#fff}
+  header{background:linear-gradient(160deg,#111128 0%,#1a1a3e 100%);text-align:center;padding:40px 20px 32px;border-bottom:1px solid rgba(99,102,241,.25)}
+  header h1{font-size:2rem;font-weight:700;color:#fff}header p{font-size:.95rem;color:#94a3b8;margin-top:6px}
+  .container{max-width:700px;margin:0 auto;padding:36px 24px}
+  .cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+  .cat-btn{background:transparent;border:1px solid rgba(99,102,241,.3);color:#94a3b8;padding:8px 16px;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.82rem;cursor:pointer;transition:all .2s}
+  .cat-btn.active,.cat-btn:hover{background:#6366f1;border-color:#6366f1;color:#fff}
+  label{display:block;font-size:.82rem;font-weight:600;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+  input[type=number],select{width:100%;background:#111128;border:1px solid rgba(99,102,241,.3);color:#e2e8f0;font-family:'Poppins',sans-serif;font-size:.95rem;border-radius:10px;padding:12px 16px;outline:none;transition:border-color .2s}
+  input:focus,select:focus{border-color:#6366f1}
+  .row{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:end;margin-bottom:20px}
+  .swap-btn{background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;border-radius:10px;padding:12px 14px;cursor:pointer;font-size:1.1rem;transition:all .2s;white-space:nowrap}
+  .swap-btn:hover{background:#6366f1;color:#fff}
+  .result-box{background:#111128;border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:20px;margin-top:4px;font-size:1.3rem;font-weight:700;color:#a5b4fc;text-align:center}
+  .result-sub{font-size:.8rem;color:#64748b;margin-top:4px;font-weight:400}
+  @media(max-width:500px){.row{grid-template-columns:1fr;grid-template-rows:auto auto auto}}
+</style>
+</head>
+<body>
+<header><h1>📐 Unit Converter</h1><p>Convert length, weight, temperature and more</p></header>
+<div class="container">
+  <a class="back" href="../index.html">← Back to Developer OS</a>
+  <div class="cat-tabs">
+    <button class="cat-btn active" onclick="setCategory('length',this)">📏 Length</button>
+    <button class="cat-btn" onclick="setCategory('weight',this)">⚖️ Weight</button>
+    <button class="cat-btn" onclick="setCategory('temp',this)">🌡️ Temp</button>
+    <button class="cat-btn" onclick="setCategory('area',this)">📐 Area</button>
+    <button class="cat-btn" onclick="setCategory('speed',this)">💨 Speed</button>
+  </div>
+  <div><label>Value</label><input type="number" id="val" value="1" oninput="convert()"></div>
+  <div class="row" style="margin-top:16px">
+    <div><label>From</label><select id="from" onchange="convert()"></select></div>
+    <button class="swap-btn" onclick="swapUnits()">⇄</button>
+    <div><label>To</label><select id="to" onchange="convert()"></select></div>
+  </div>
+  <div class="result-box" id="result">—<div class="result-sub" id="resultSub"></div></div>
+</div>
+<script>
+const units={
+  length:{m:1,km:0.001,cm:100,mm:1000,mile:0.000621371,yard:1.09361,foot:3.28084,inch:39.3701},
+  weight:{kg:1,g:1000,mg:1e6,lb:2.20462,oz:35.274,ton:0.001},
+  temp:{celsius:'base',fahrenheit:'f',kelvin:'k'},
+  area:{m2:1,'km2':1e-6,cm2:1e4,mm2:1e6,hectare:1e-4,acre:0.000247105,'ft2':10.7639,'in2':1550},
+  speed:{'m/s':1,'km/h':3.6,mph:2.23694,knot:1.94384}
+};
+const labels={
+  length:{m:'Meter',km:'Kilometer',cm:'Centimeter',mm:'Millimeter',mile:'Mile',yard:'Yard',foot:'Foot',inch:'Inch'},
+  weight:{kg:'Kilogram',g:'Gram',mg:'Milligram',lb:'Pound',oz:'Ounce',ton:'Metric Ton'},
+  temp:{celsius:'Celsius (°C)',fahrenheit:'Fahrenheit (°F)',kelvin:'Kelvin (K)'},
+  area:{m2:'m²','km2':'km²',cm2:'cm²',mm2:'mm²',hectare:'Hectare',acre:'Acre','ft2':'ft²','in2':'in²'},
+  speed:{'m/s':'m/s','km/h':'km/h',mph:'mph',knot:'Knot'}
+};
+let cat='length';
+function setCategory(c,btn){
+  cat=c;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const opts=Object.keys(units[c]);
+  ['from','to'].forEach((id,i)=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML=opts.map(k=>`<option value="${k}">${labels[c][k]}</option>`).join('');
+    sel.value=opts[i===1&&opts.length>1?1:0];
+  });
+  convert();
+}
+function convert(){
+  const v=parseFloat(document.getElementById('val').value);
+  const f=document.getElementById('from').value;
+  const t=document.getElementById('to').value;
+  if(isNaN(v)){document.getElementById('result').innerHTML='Enter a number<div class="result-sub"></div>';return;}
+  let res;
+  if(cat==='temp'){
+    let c;
+    if(f==='celsius') c=v;
+    else if(f==='fahrenheit') c=(v-32)*5/9;
+    else c=v-273.15;
+    if(t==='celsius') res=c;
+    else if(t==='fahrenheit') res=c*9/5+32;
+    else res=c+273.15;
+  } else {
+    const base=v/units[cat][f];
+    res=base*units[cat][t];
+  }
+  const disp=res%1===0?res:parseFloat(res.toPrecision(6));
+  document.getElementById('result').innerHTML=`${v} ${labels[cat][f]} = <strong>${disp} ${labels[cat][t]}</strong><div class="result-sub">${f} → ${t}</div>`;
+}
+setCategory('length',document.querySelector('.cat-btn'));
+</script>
+</body></html>
