@@ -1,0 +1,49 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CSV to JSON | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">📊 CSV to JSON Converter</span>
+</div>
+<div class="container">
+  <div class="mb">
+    <label>CSV Input (first row = headers)</label>
+    <textarea id="csv" rows="8" placeholder="name,age,city&#10;Alice,30,Mumbai&#10;Bob,25,Delhi"></textarea>
+  </div>
+  <div class="flex mb">
+    <button class="btn btn-primary" onclick="convert()">Convert →</button>
+    <button class="btn btn-secondary" onclick="copy()">📋 Copy JSON</button>
+    <button class="btn btn-secondary" onclick="clear_()">Clear</button>
+  </div>
+  <label>JSON Output</label>
+  <div class="output-box" id="out" style="min-height:200px">Output will appear here…</div>
+</div>
+<div class="toast" id="toast">Copied!</div>
+<script>
+  function convert() {
+    const raw = document.getElementById('csv').value.trim();
+    const out = document.getElementById('out');
+    if(!raw) { out.textContent='Paste some CSV above.'; return; }
+    try {
+      const lines = raw.split('\n').map(l=>l.trim()).filter(Boolean);
+      const headers = lines[0].split(',').map(h=>h.trim());
+      const result = lines.slice(1).map(line => {
+        const vals = line.split(',').map(v=>v.trim());
+        const obj = {};
+        headers.forEach((h,i)=>{ const v=vals[i]??''; obj[h]=isNaN(v)||v===''?v:Number(v); });
+        return obj;
+      });
+      out.textContent = JSON.stringify(result, null, 2);
+      out.className = 'output-box success-border';
+    } catch(e) { out.textContent='Error: '+e.message; out.className='output-box error-border'; }
+  }
+  function copy() { navigator.clipboard.writeText(document.getElementById('out').textContent).then(()=>{const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}); }
+  function clear_() { document.getElementById('csv').value=''; document.getElementById('out').textContent='Output will appear here…'; document.getElementById('out').className='output-box'; }
+</script>
+</body></html>
