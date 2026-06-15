@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HTML Preview – Developer OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Poppins',sans-serif;background:#0d0d1a;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column}
+  a.back{display:inline-flex;align-items:center;gap:8px;color:#a5b4fc;text-decoration:none;font-size:.85rem;font-weight:500;margin-bottom:16px;transition:color .2s}
+  a.back:hover{color:#fff}
+  header{background:linear-gradient(160deg,#111128 0%,#1a1a3e 100%);text-align:center;padding:32px 20px 24px;border-bottom:1px solid rgba(99,102,241,.25)}
+  header h1{font-size:1.8rem;font-weight:700;color:#fff}
+  header p{font-size:.9rem;color:#94a3b8;margin-top:4px}
+  .toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#0d0d1a;border-bottom:1px solid rgba(99,102,241,.15);flex-wrap:wrap;gap:10px}
+  .btn{display:inline-flex;align-items:center;gap:6px;background:#6366f1;color:#fff;border:none;padding:9px 18px;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:background .2s}
+  .btn:hover{background:#4f46e5}
+  .btn-ghost{background:transparent;border:1px solid rgba(99,102,241,.4);color:#a5b4fc}
+  .btn-ghost:hover{background:rgba(99,102,241,.1)}
+  .editor-area{display:grid;grid-template-columns:1fr 1fr;flex:1;height:calc(100vh - 180px)}
+  textarea{width:100%;height:100%;background:#111128;border:none;border-right:1px solid rgba(99,102,241,.2);color:#e2e8f0;font-family:'Courier New',monospace;font-size:.88rem;padding:16px;outline:none;resize:none;line-height:1.6}
+  iframe{width:100%;height:100%;border:none;background:#fff}
+  .label-bar{display:grid;grid-template-columns:1fr 1fr;background:#0a0a14;border-bottom:1px solid rgba(99,102,241,.1)}
+  .label-bar span{padding:8px 16px;font-size:.75rem;color:#4a5568;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+  @media(max-width:700px){.editor-area{grid-template-columns:1fr;grid-template-rows:1fr 1fr;height:auto} textarea,iframe{height:300px}}
+</style>
+</head>
+<body>
+<header><h1>🌐 HTML Preview</h1><p>Live HTML editor with instant preview</p></header>
+<div class="toolbar">
+  <a class="back" href="../index.html" style="margin:0">← Back</a>
+  <div style="display:flex;gap:8px">
+    <button class="btn" onclick="run()">▶ Run</button>
+    <button class="btn btn-ghost" onclick="clearAll()">🗑 Clear</button>
+    <button class="btn btn-ghost" onclick="loadSample()">📄 Sample</button>
+  </div>
+</div>
+<div class="label-bar"><span>📝 HTML Editor</span><span>👁 Live Preview</span></div>
+<div class="editor-area">
+  <textarea id="editor" oninput="run()" placeholder="Type HTML here..."></textarea>
+  <iframe id="preview"></iframe>
+</div>
+<script>
+  function run() {
+    const code = document.getElementById('editor').value;
+    const iframe = document.getElementById('preview');
+    iframe.srcdoc = code;
+  }
+  function clearAll() { document.getElementById('editor').value=''; run(); }
+  function loadSample() {
+    document.getElementById('editor').value = `<!DOCTYPE html>\n<html>\n<head><style>body{font-family:sans-serif;padding:20px;background:#f0f4ff}h1{color:#6366f1}p{color:#333}.card{background:#fff;border-radius:12px;padding:20px;margin-top:16px;box-shadow:0 2px 8px rgba(0,0,0,.1)}</style></head>\n<body>\n  <h1>🚀 Hello, Developer OS!</h1>\n  <p>Edit this HTML and see live preview.</p>\n  <div class="card">\n    <h2>Sample Card</h2>\n    <p>You can build anything here.</p>\n  </div>\n</body>\n</html>`;
+    run();
+  }
+  loadSample();
+</script>
+</body></html>
