@@ -1,0 +1,77 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cron Parser | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .cron-fields { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:16px 0; }
+    .cron-field { text-align:center; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 6px; }
+    .cron-field .val { font-family:'JetBrains Mono',monospace; font-size:1.1rem; font-weight:700; color:var(--accent); }
+    .cron-field .lbl { font-size:0.7rem; color:var(--muted); margin-top:4px; }
+    .presets { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+    .preset-btn { background:var(--surface); border:1px solid var(--border); color:var(--text); border-radius:6px; padding:6px 12px; font-size:0.78rem; font-family:'JetBrains Mono',monospace; cursor:pointer; transition:border-color .15s; }
+    .preset-btn:hover { border-color:var(--accent); }
+    .next-times { margin-top:14px; }
+    .time-item { padding:8px 0; border-bottom:1px solid var(--border); font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--muted); }
+    .time-item:last-child { border:none; }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">🕐 Cron Parser</span>
+</div>
+<div class="container">
+  <label>Cron Expression</label>
+  <input type="text" id="cron" value="0 9 * * 1-5" oninput="parse()" style="font-family:'JetBrains Mono',monospace;font-size:1rem;letter-spacing:0.08em">
+  <div class="cron-fields" id="fields">
+    <div class="cron-field"><div class="val" id="f0">*</div><div class="lbl">Minute</div></div>
+    <div class="cron-field"><div class="val" id="f1">*</div><div class="lbl">Hour</div></div>
+    <div class="cron-field"><div class="val" id="f2">*</div><div class="lbl">Day (month)</div></div>
+    <div class="cron-field"><div class="val" id="f3">*</div><div class="lbl">Month</div></div>
+    <div class="cron-field"><div class="val" id="f4">*</div><div class="lbl">Day (week)</div></div>
+  </div>
+  <div class="output-box" id="desc" style="margin-bottom:16px">—</div>
+  <label>Quick Presets</label>
+  <div class="presets">
+    <button class="preset-btn" onclick="set('* * * * *')">Every minute</button>
+    <button class="preset-btn" onclick="set('0 * * * *')">Every hour</button>
+    <button class="preset-btn" onclick="set('0 0 * * *')">Daily midnight</button>
+    <button class="preset-btn" onclick="set('0 9 * * 1-5')">Weekdays 9am</button>
+    <button class="preset-btn" onclick="set('0 0 * * 0')">Weekly Sunday</button>
+    <button class="preset-btn" onclick="set('0 0 1 * *')">Monthly 1st</button>
+    <button class="preset-btn" onclick="set('*/15 * * * *')">Every 15 min</button>
+    <button class="preset-btn" onclick="set('0 0 1 1 *')">Yearly Jan 1</button>
+  </div>
+</div>
+<script>
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  function set(v){document.getElementById('cron').value=v;parse();}
+  function parse(){
+    const v=document.getElementById('cron').value.trim();
+    const parts=v.split(/\s+/);
+    if(parts.length!==5){document.getElementById('desc').textContent='⚠️ Enter exactly 5 fields: minute hour day month weekday';return;}
+    parts.forEach((p,i)=>document.getElementById('f'+i).textContent=p);
+    document.getElementById('desc').textContent=describe(parts);
+  }
+  function describe([min,hr,dom,mon,dow]){
+    let s='Runs ';
+    if(min==='*'&&hr==='*')s+='every minute';
+    else if(min.startsWith('*/')&&hr==='*')s+=`every ${min.slice(2)} minutes`;
+    else if(hr==='*')s+=`at minute ${min} of every hour`;
+    else s+=`at ${hr.padStart(2,'0')}:${min.padStart(2,'0')}`;
+    if(dom!=='*')s+=`, on day ${dom} of the month`;
+    if(mon!=='*'){const ms=mon.split(',').map(m=>MONTHS[+m-1]||m);s+=`, in ${ms.join(', ')}`;}
+    if(dow!=='*'){
+      const days=dow.includes('-')?`${DAYS[+dow.split('-')[0]]}–${DAYS[+dow.split('-')[1]]}`
+        :dow.split(',').map(d=>DAYS[+d]||d).join(', ');
+      s+=`, on ${days}`;
+    } else if(dom==='*'){s+=' of every day';}
+    return s+'.';
+  }
+  parse();
+</script>
+</body></html>
