@@ -1,0 +1,67 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>To-Do List | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .add-row { display:flex; gap:10px; margin-bottom:20px; }
+    .add-row input { flex:1; }
+    .todo-item { display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--surface); border:1px solid var(--border); border-radius:8px; margin-bottom:8px; transition:opacity .2s; }
+    .todo-item.done { opacity:0.45; }
+    .todo-item.done .todo-text { text-decoration:line-through; color:var(--muted); }
+    .todo-text { flex:1; font-size:0.88rem; }
+    .check-btn { width:22px; height:22px; border-radius:50%; border:2px solid var(--border); background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:border-color .15s,background .15s; flex-shrink:0; }
+    .check-btn.done { background:var(--accent2); border-color:var(--accent2); }
+    .del-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.85rem; padding:4px; transition:color .15s; }
+    .del-btn:hover { color:var(--danger); }
+    .stats { color:var(--muted); font-size:0.78rem; margin-bottom:16px; }
+    .filter-row { display:flex; gap:8px; margin-bottom:16px; }
+    .filter-btn { background:none; border:1px solid var(--border); color:var(--muted); border-radius:6px; padding:5px 12px; font-size:0.78rem; cursor:pointer; transition:all .15s; }
+    .filter-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">✅ To-Do List</span>
+</div>
+<div class="container">
+  <div class="add-row">
+    <input type="text" id="newtask" placeholder="Add a new task…" onkeydown="if(event.key==='Enter')add()">
+    <button class="btn btn-primary" onclick="add()">Add</button>
+  </div>
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filter('all',this)">All</button>
+    <button class="filter-btn" onclick="filter('active',this)">Active</button>
+    <button class="filter-btn" onclick="filter('done',this)">Done</button>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div id="list"></div>
+  <button class="btn btn-secondary" style="margin-top:16px;font-size:0.78rem" onclick="clearDone()">Clear completed</button>
+</div>
+<script>
+  let tasks=JSON.parse(localStorage.getItem('devos-todos')||'[]');
+  let view='all';
+  function save(){localStorage.setItem('devos-todos',JSON.stringify(tasks));}
+  function add(){const t=document.getElementById('newtask').value.trim();if(!t)return;tasks.push({id:Date.now(),text:t,done:false});document.getElementById('newtask').value='';save();render();}
+  function toggle(id){const t=tasks.find(t=>t.id===id);if(t)t.done=!t.done;save();render();}
+  function del(id){tasks=tasks.filter(t=>t.id!==id);save();render();}
+  function clearDone(){tasks=tasks.filter(t=>!t.done);save();render();}
+  function filter(v,btn){view=v;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+  function render(){
+    const visible=tasks.filter(t=>view==='all'?true:view==='active'?!t.done:t.done);
+    const done=tasks.filter(t=>t.done).length;
+    document.getElementById('stats').textContent=`${done}/${tasks.length} completed`;
+    document.getElementById('list').innerHTML=visible.length?visible.map(t=>`
+      <div class="todo-item ${t.done?'done':''}">
+        <button class="check-btn ${t.done?'done':''}" onclick="toggle(${t.id})">${t.done?'✓':''}</button>
+        <span class="todo-text">${esc(t.text)}</span>
+        <button class="del-btn" onclick="del(${t.id})">✕</button>
+      </div>`).join(''):'<div style="color:var(--muted);text-align:center;padding:24px;font-size:0.85rem">No tasks here.</div>';
+  }
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  render();
+</script>
+</body></html>
