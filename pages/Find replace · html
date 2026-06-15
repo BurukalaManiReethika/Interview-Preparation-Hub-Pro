@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Find & Replace – Developer OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Poppins',sans-serif;background:#0d0d1a;color:#e2e8f0;min-height:100vh}
+  a.back{display:inline-flex;align-items:center;gap:8px;color:#a5b4fc;text-decoration:none;font-size:.85rem;font-weight:500;margin-bottom:28px;transition:color .2s}
+  a.back:hover{color:#fff}
+  header{background:linear-gradient(160deg,#111128 0%,#1a1a3e 100%);text-align:center;padding:40px 20px 32px;border-bottom:1px solid rgba(99,102,241,.25)}
+  header h1{font-size:2rem;font-weight:700;color:#fff}
+  header p{font-size:.95rem;color:#94a3b8;margin-top:6px}
+  .container{max-width:800px;margin:0 auto;padding:36px 24px}
+  label{display:block;font-size:.82rem;font-weight:600;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+  textarea,input[type=text]{width:100%;background:#111128;border:1px solid rgba(99,102,241,.3);color:#e2e8f0;font-family:'Poppins',sans-serif;font-size:.92rem;border-radius:10px;padding:12px 16px;outline:none;transition:border-color .2s}
+  textarea{resize:vertical;min-height:160px}
+  textarea:focus,input:focus{border-color:#6366f1}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+  .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:#6366f1;color:#fff;border:none;padding:11px 24px;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
+  .btn:hover{background:#4f46e5;transform:translateY(-1px)}
+  .btn-ghost{background:transparent;border:1px solid rgba(99,102,241,.4);color:#a5b4fc}
+  .btn-ghost:hover{background:rgba(99,102,241,.1)}
+  .output-box{background:#111128;border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:18px;margin-top:20px;font-size:.9rem;line-height:1.7;color:#cbd5e1;white-space:pre-wrap;word-break:break-all;min-height:80px}
+  .info{font-size:.82rem;color:#64748b;margin-top:10px}
+  .toast{position:fixed;bottom:24px;right:24px;background:#6366f1;color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .3s;z-index:999}
+  .toast.show{opacity:1}
+  .checkbox-row{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.85rem;color:#94a3b8}
+  input[type=checkbox]{width:16px;height:16px;accent-color:#6366f1}
+  @media(max-width:600px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>🔁 Find & Replace</h1><p>Bulk find and replace text instantly</p></header>
+<div class="container">
+  <a class="back" href="../index.html">← Back to Developer OS</a>
+  <div class="section" style="margin-bottom:20px">
+    <label>Input Text</label>
+    <textarea id="input" placeholder="Paste your text here..."></textarea>
+  </div>
+  <div class="row">
+    <div><label>Find</label><input type="text" id="find" placeholder="Text to find..."></div>
+    <div><label>Replace With</label><input type="text" id="replace" placeholder="Replace with..."></div>
+  </div>
+  <div class="checkbox-row">
+    <input type="checkbox" id="caseSensitive">
+    <label style="margin:0;text-transform:none;letter-spacing:0;font-size:.85rem">Case sensitive</label>
+    <input type="checkbox" id="useRegex" style="margin-left:16px">
+    <label style="margin:0;text-transform:none;letter-spacing:0;font-size:.85rem">Use Regex</label>
+  </div>
+  <div class="btn-row">
+    <button class="btn" onclick="doReplace()">🔁 Replace All</button>
+    <button class="btn btn-ghost" onclick="copy()">📋 Copy Result</button>
+    <button class="btn btn-ghost" onclick="clearAll()">🗑 Clear</button>
+  </div>
+  <div class="info" id="info"></div>
+  <label style="margin-top:24px">Output</label>
+  <div class="output-box" id="output">Result will appear here...</div>
+</div>
+<div class="toast" id="toast">Copied!</div>
+<script>
+  function doReplace() {
+    const input = document.getElementById('input').value;
+    const find = document.getElementById('find').value;
+    const rep = document.getElementById('replace').value;
+    const cs = document.getElementById('caseSensitive').checked;
+    const rx = document.getElementById('useRegex').checked;
+    if (!find) { document.getElementById('info').textContent = 'Please enter text to find.'; return; }
+    let count = 0, result;
+    try {
+      const pattern = rx ? new RegExp(find, cs ? 'g' : 'gi') : new RegExp(find.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), cs ? 'g' : 'gi');
+      result = input.replace(pattern, m => { count++; return rep; });
+    } catch(e) { document.getElementById('info').textContent = 'Invalid regex: ' + e.message; return; }
+    document.getElementById('output').textContent = result;
+    document.getElementById('info').textContent = `✅ ${count} replacement(s) made.`;
+  }
+  function copy() {
+    navigator.clipboard.writeText(document.getElementById('output').textContent);
+    const t = document.getElementById('toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000);
+  }
+  function clearAll() {
+    document.getElementById('input').value=''; document.getElementById('find').value=''; document.getElementById('replace').value='';
+    document.getElementById('output').textContent='Result will appear here...'; document.getElementById('info').textContent='';
+  }
+</script>
+</body></html>
