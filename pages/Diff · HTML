@@ -1,0 +1,63 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Text Diff | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .diff-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:600px){.diff-grid{grid-template-columns:1fr;}}
+    .diff-out { font-family:'JetBrains Mono',monospace; font-size:0.8rem; line-height:1.8;
+      background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:14px;
+      white-space:pre-wrap; margin-top:16px; min-height:100px; }
+    .added   { background:rgba(0,217,166,0.15); color:#00d9a6; display:block; }
+    .removed { background:rgba(255,94,122,0.15); color:#ff5e7a; display:block; }
+    .same    { color:var(--muted); display:block; }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">↔️ Text Diff</span>
+</div>
+<div class="container">
+  <div class="diff-grid mb">
+    <div>
+      <label>Original</label>
+      <textarea id="a" rows="8" placeholder="Original text…"></textarea>
+    </div>
+    <div>
+      <label>Modified</label>
+      <textarea id="b" rows="8" placeholder="Modified text…"></textarea>
+    </div>
+  </div>
+  <div class="flex">
+    <button class="btn btn-primary" onclick="diff()">Compare →</button>
+    <button class="btn btn-secondary" onclick="clear_()">Clear</button>
+  </div>
+  <label class="mt">Diff Output <span id="stats" style="color:var(--muted);font-size:0.75rem"></span></label>
+  <div class="diff-out" id="out">Differences will appear here…</div>
+</div>
+<script>
+  function diff() {
+    const aLines = document.getElementById('a').value.split('\n');
+    const bLines = document.getElementById('b').value.split('\n');
+    const out = document.getElementById('out');
+    let html='', added=0, removed=0;
+    const maxLen = Math.max(aLines.length, bLines.length);
+    for(let i=0; i<maxLen; i++) {
+      const a = aLines[i] ?? '', b = bLines[i] ?? '';
+      if(a===b) { html+=`<span class="same">${esc(a)}</span>`; }
+      else {
+        if(a!==undefined && a!=='') { html+=`<span class="removed">- ${esc(a)}</span>`; removed++; }
+        if(b!==undefined && b!=='') { html+=`<span class="added">+ ${esc(b)}</span>`; added++; }
+      }
+    }
+    out.innerHTML = html || '<span class="same">No differences found.</span>';
+    document.getElementById('stats').textContent = `+${added} added  -${removed} removed`;
+  }
+  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function clear_() { document.getElementById('a').value=''; document.getElementById('b').value=''; document.getElementById('out').innerHTML='Differences will appear here…'; document.getElementById('stats').textContent=''; }
+</script>
+</body></html>
