@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Flashcards – Developer OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Poppins',sans-serif;background:#0d0d1a;color:#e2e8f0;min-height:100vh}
+  a.back{display:inline-flex;align-items:center;gap:8px;color:#a5b4fc;text-decoration:none;font-size:.85rem;font-weight:500;margin-bottom:28px}
+  a.back:hover{color:#fff}
+  header{background:linear-gradient(160deg,#111128 0%,#1a1a3e 100%);text-align:center;padding:40px 20px 32px;border-bottom:1px solid rgba(99,102,241,.25)}
+  header h1{font-size:2rem;font-weight:700;color:#fff}header p{font-size:.95rem;color:#94a3b8;margin-top:6px}
+  .container{max-width:700px;margin:0 auto;padding:36px 24px;text-align:center}
+  .filter-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:28px}
+  .filter-btn{background:transparent;border:1px solid rgba(99,102,241,.3);color:#94a3b8;padding:7px 16px;border-radius:8px;font-family:'Poppins',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s}
+  .filter-btn.active,.filter-btn:hover{background:#6366f1;border-color:#6366f1;color:#fff}
+  .card-wrap{perspective:1000px;margin-bottom:24px}
+  .card{width:100%;min-height:240px;cursor:pointer;transform-style:preserve-3d;transition:transform .5s;position:relative}
+  .card.flipped{transform:rotateY(180deg)}
+  .card-face{position:absolute;width:100%;min-height:240px;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;border:1px solid rgba(99,102,241,.25)}
+  .card-front{background:#111128}
+  .card-back{background:#161630;transform:rotateY(180deg)}
+  .card-tag{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:#6366f1;margin-bottom:16px;font-weight:700}
+  .card-q{font-size:1.15rem;font-weight:600;color:#e2e8f0;line-height:1.5}
+  .card-a{font-size:.95rem;color:#94a3b8;line-height:1.7}
+  .hint{font-size:.78rem;color:#4a5568;margin-top:12px}
+  .progress{font-size:.85rem;color:#64748b;margin-bottom:16px}
+  .btn-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:#6366f1;color:#fff;border:none;padding:11px 22px;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:background .2s}
+  .btn:hover{background:#4f46e5}
+  .btn-ghost{background:transparent;border:1px solid rgba(99,102,241,.4);color:#a5b4fc}
+  .btn-ghost:hover{background:rgba(99,102,241,.1)}
+  .score-row{display:flex;justify-content:center;gap:20px;margin-bottom:20px}
+  .score-box{background:#111128;border:1px solid rgba(99,102,241,.15);border-radius:10px;padding:10px 20px;font-size:.82rem;color:#64748b}
+  .score-box strong{display:block;font-size:1.1rem;color:#a5b4fc}
+</style>
+</head>
+<body>
+<header><h1>🃏 Flashcards</h1><p>DSA & Interview Q&A — flip to reveal answers</p></header>
+<div class="container">
+  <a class="back" href="../index.html">← Back to Developer OS</a>
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-btn" onclick="setFilter('arrays',this)">Arrays</button>
+    <button class="filter-btn" onclick="setFilter('trees',this)">Trees</button>
+    <button class="filter-btn" onclick="setFilter('graphs',this)">Graphs</button>
+    <button class="filter-btn" onclick="setFilter('dp',this)">Dynamic Programming</button>
+    <button class="filter-btn" onclick="setFilter('system',this)">System Design</button>
+  </div>
+  <div class="score-row">
+    <div class="score-box"><strong id="known">0</strong>Got it ✅</div>
+    <div class="score-box"><strong id="total">0</strong>Total</div>
+    <div class="score-box"><strong id="skip">0</strong>Skip ⏭</div>
+  </div>
+  <div class="progress" id="progress">Card 1 of 1</div>
+  <div class="card-wrap"><div class="card" id="card" onclick="flip()">
+    <div class="card-face card-front"><div class="card-tag" id="tag">—</div><div class="card-q" id="question">Loading...</div><div class="hint">👆 Click to reveal answer</div></div>
+    <div class="card-face card-back"><div class="card-tag">Answer</div><div class="card-a" id="answer">—</div></div>
+  </div></div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="markSkip()">⏭ Skip</button>
+    <button class="btn btn-ghost" onclick="prev()">← Prev</button>
+    <button class="btn" onclick="markKnown()">✅ Got it</button>
+    <button class="btn btn-ghost" onclick="next()">Next →</button>
+    <button class="btn btn-ghost" onclick="shuffle()">🔀 Shuffle</button>
+  </div>
+</div>
+<script>
+const allCards=[
+  {tag:'Arrays',q:'What is the time complexity of binary search?',a:'O(log n) — Binary search halves the search space each iteration, requiring at most log₂(n) comparisons.'},
+  {tag:'Arrays',q:'How do you find duplicates in an array in O(n) time?',a:'Use a Hash Set: iterate through the array, check if the element exists in the set. If yes, it\'s a duplicate. If no, add it to the set.'},
+  {tag:'Arrays',q:'What is the sliding window technique?',a:'A technique that maintains a window (subarray/substring) over the data and slides it forward. Used to find max/min subarrays of fixed size in O(n) time instead of O(n²).'},
+  {tag:'Arrays',q:'Explain Two Pointer technique',a:'Use two indices (left & right) to traverse the array from both ends toward the center. Useful for problems like two-sum on sorted arrays, reversing, or palindrome checks.'},
+  {tag:'Trees',q:'What is the difference between BFS and DFS?',a:'BFS (Breadth-First Search) explores level by level using a Queue — good for shortest path. DFS (Depth-First Search) explores branch by branch using a Stack/recursion — good for path finding, topological sort.'},
+  {tag:'Trees',q:'What is a balanced BST and why does it matter?',a:'A BST where the height difference between left and right subtrees is at most 1. Ensures O(log n) operations. Examples: AVL trees, Red-Black trees.'},
+  {tag:'Trees',q:'How do you serialize and deserialize a binary tree?',a:'Serialize: do a preorder traversal and record values (use null markers for missing nodes). Deserialize: reconstruct the tree from the serialized string by reading values and building nodes recursively.'},
+  {tag:'Graphs',q:'What is Dijkstra\'s algorithm used for?',a:'Finding the shortest path from a source node to all other nodes in a weighted graph with non-negative edge weights. Time complexity: O((V + E) log V) with a min-heap.'},
+  {tag:'Graphs',q:'Explain topological sort',a:'An ordering of vertices in a Directed Acyclic Graph (DAG) such that for every edge u→v, u comes before v. Used for scheduling, build systems, dependency resolution.'},
+  {tag:'Graphs',q:'What is Union-Find (Disjoint Set)?',a:'A data structure that tracks connected components. Supports find (which component is a node in?) and union (merge two components). Useful for cycle detection and Kruskal\'s MST.'},
+  {tag:'DP',q:'What is memoization?',a:'Top-down Dynamic Programming — store results of expensive function calls and return the cached result when the same inputs occur again. Avoids redundant computation in recursive solutions.'},
+  {tag:'DP',q:'What is the 0/1 Knapsack problem?',a:'Given n items with weights and values, find the maximum value that fits in a bag of capacity W. Each item can be included (1) or excluded (0). Solved in O(n×W) time using DP.'},
+  {tag:'DP',q:'Explain Longest Common Subsequence (LCS)',a:'Find the length of the longest subsequence present in both strings. Use a 2D DP table where dp[i][j] = LCS of first i chars of s1 and first j chars of s2. Time: O(m×n).'},
+  {tag:'System',q:'What is consistent hashing?',a:'A technique to distribute data across servers such that adding/removing a server only remaps K/n keys (K = total keys, n = servers). Used in distributed caches like Memcached.'},
+  {tag:'System',q:'What is the CAP theorem?',a:'A distributed system can guarantee only 2 of 3: Consistency (every read gets the latest write), Availability (every request gets a response), Partition Tolerance (system works despite network partitions).'},
+  {tag:'System',q:'What is a Load Balancer?',a:'Distributes incoming network traffic across multiple servers to ensure no single server bears too much load. Types: Round Robin, Least Connections, IP Hash. Improves availability and scalability.'},
+];
+let cards=[...allCards],idx=0,known=0,skipped=0,flipped=false,filter='all';
+function setFilter(f,btn){
+  filter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  cards=f==='all'?[...allCards]:allCards.filter(c=>c.tag.toLowerCase()===f);
+  idx=0;known=0;skipped=0;updateScore();showCard();
+}
+function showCard(){
+  if(!cards.length){document.getElementById('question').textContent='No cards in this category.';return;}
+  const c=cards[idx];
+  document.getElementById('question').textContent=c.q;
+  document.getElementById('answer').textContent=c.a;
+  document.getElementById('tag').textContent=c.tag;
+  document.getElementById('progress').textContent=`Card ${idx+1} of ${cards.length}`;
+  const card=document.getElementById('card');card.classList.remove('flipped');flipped=false;
+}
+function flip(){const card=document.getElementById('card');card.classList.toggle('flipped');flipped=!flipped;}
+function next(){if(idx<cards.length-1){idx++;showCard();}}
+function prev(){if(idx>0){idx--;showCard();}}
+function markKnown(){known++;updateScore();next();}
+function markSkip(){skipped++;updateScore();next();}
+function shuffle(){cards.sort(()=>Math.random()-.5);idx=0;showCard();}
+function updateScore(){document.getElementById('known').textContent=known;document.getElementById('total').textContent=cards.length;document.getElementById('skip').textContent=skipped;}
+updateScore();showCard();
+</script>
+</body></html>
