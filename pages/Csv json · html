@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CSV ↔ JSON – Developer OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Poppins',sans-serif;background:#0d0d1a;color:#e2e8f0;min-height:100vh}
+  a.back{display:inline-flex;align-items:center;gap:8px;color:#a5b4fc;text-decoration:none;font-size:.85rem;font-weight:500;margin-bottom:28px}
+  a.back:hover{color:#fff}
+  header{background:linear-gradient(160deg,#111128 0%,#1a1a3e 100%);text-align:center;padding:40px 20px 32px;border-bottom:1px solid rgba(99,102,241,.25)}
+  header h1{font-size:2rem;font-weight:700;color:#fff}header p{font-size:.95rem;color:#94a3b8;margin-top:6px}
+  .container{max-width:900px;margin:0 auto;padding:36px 24px}
+  label{display:block;font-size:.82rem;font-weight:600;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+  textarea{width:100%;background:#111128;border:1px solid rgba(99,102,241,.3);color:#e2e8f0;font-family:'Courier New',monospace;font-size:.85rem;border-radius:10px;padding:12px 16px;outline:none;transition:border-color .2s;resize:vertical;min-height:180px}
+  textarea:focus{border-color:#6366f1}
+  .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:#6366f1;color:#fff;border:none;padding:11px 22px;border-radius:10px;font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:background .2s,transform .15s}
+  .btn:hover{background:#4f46e5;transform:translateY(-1px)}
+  .btn-ghost{background:transparent;border:1px solid rgba(99,102,241,.4);color:#a5b4fc}
+  .btn-ghost:hover{background:rgba(99,102,241,.1)}
+  .error{color:#f87171;font-size:.85rem;margin-top:8px}
+  .toast{position:fixed;bottom:24px;right:24px;background:#6366f1;color:#fff;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;opacity:0;pointer-events:none;transition:opacity .3s;z-index:999}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header><h1>📊 CSV ↔ JSON</h1><p>Convert CSV to JSON and JSON to CSV instantly</p></header>
+<div class="container">
+  <a class="back" href="../index.html">← Back to Developer OS</a>
+  <div style="margin-bottom:16px"><label>Input</label><textarea id="input" placeholder="Paste CSV or JSON here...
+name,age,city
+Alice,30,New York
+Bob,25,London"></textarea></div>
+  <div class="btn-row">
+    <button class="btn" onclick="csvToJson()">📋 CSV → JSON</button>
+    <button class="btn" onclick="jsonToCsv()">📄 JSON → CSV</button>
+    <button class="btn btn-ghost" onclick="copy()">📋 Copy Output</button>
+    <button class="btn btn-ghost" onclick="clearAll()">🗑 Clear</button>
+  </div>
+  <div class="error" id="error"></div>
+  <label>Output</label>
+  <textarea id="output" readonly placeholder="Output will appear here..."></textarea>
+</div>
+<div class="toast" id="toast">Copied!</div>
+<script>
+  function csvToJson(){
+    const input=document.getElementById('input').value.trim();
+    document.getElementById('error').textContent='';
+    try{
+      const lines=input.split('\n').filter(l=>l.trim());
+      const headers=lines[0].split(',').map(h=>h.trim());
+      const result=lines.slice(1).map(line=>{
+        const vals=line.split(',').map(v=>v.trim());
+        const obj={};headers.forEach((h,i)=>obj[h]=vals[i]||'');return obj;
+      });
+      document.getElementById('output').value=JSON.stringify(result,null,2);
+    }catch(e){document.getElementById('error').textContent='❌ '+e.message;}
+  }
+  function jsonToCsv(){
+    const input=document.getElementById('input').value.trim();
+    document.getElementById('error').textContent='';
+    try{
+      const data=JSON.parse(input);
+      if(!Array.isArray(data)) throw new Error('JSON must be an array of objects');
+      const headers=Object.keys(data[0]);
+      const rows=[headers.join(','),...data.map(row=>headers.map(h=>JSON.stringify(row[h]??'')).join(','))];
+      document.getElementById('output').value=rows.join('\n');
+    }catch(e){document.getElementById('error').textContent='❌ '+e.message;}
+  }
+  function copy(){
+    navigator.clipboard.writeText(document.getElementById('output').value);
+    const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);
+  }
+  function clearAll(){document.getElementById('input').value='';document.getElementById('output').value='';document.getElementById('error').textContent='';}
+</script>
+</body></html>
