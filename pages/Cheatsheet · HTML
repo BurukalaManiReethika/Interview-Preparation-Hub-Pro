@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DSA Cheatsheet – Developer OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Poppins',sans-serif;background:#0d0d1a;color:#e2e8f0;min-height:100vh}
+  a.back{display:inline-flex;align-items:center;gap:8px;color:#a5b4fc;text-decoration:none;font-size:.85rem;font-weight:500;margin-bottom:28px}
+  a.back:hover{color:#fff}
+  header{background:linear-gradient(160deg,#111128 0%,#1a1a3e 100%);text-align:center;padding:40px 20px 32px;border-bottom:1px solid rgba(99,102,241,.25)}
+  header h1{font-size:2rem;font-weight:700;color:#fff}header p{font-size:.95rem;color:#94a3b8;margin-top:6px}
+  .container{max-width:1000px;margin:0 auto;padding:36px 24px}
+  .section-title{font-size:1rem;font-weight:700;color:#a5b4fc;margin:32px 0 14px;text-transform:uppercase;letter-spacing:1px;padding-bottom:8px;border-bottom:1px solid rgba(99,102,241,.2)}
+  table{width:100%;border-collapse:collapse;margin-bottom:8px}
+  th{background:#0a0a14;color:#6366f1;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;text-align:left;border-bottom:1px solid rgba(99,102,241,.2)}
+  td{padding:10px 14px;font-size:.85rem;border-bottom:1px solid rgba(255,255,255,.04);color:#cbd5e1;font-family:'Courier New',monospace}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:rgba(99,102,241,.05)}
+  .badge{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.72rem;font-weight:700}
+  .o1{background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.3)}
+  .ologn{background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.3)}
+  .on{background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.3)}
+  .onlogn{background:rgba(249,115,22,.15);color:#fb923c;border:1px solid rgba(249,115,22,.3)}
+  .on2{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .card-box{background:#111128;border:1px solid rgba(99,102,241,.15);border-radius:12px;padding:18px}
+  .card-box h3{font-size:.9rem;color:#e2e8f0;margin-bottom:12px;font-weight:600}
+  .card-box ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .card-box li{font-size:.82rem;color:#94a3b8;padding-left:14px;position:relative}
+  .card-box li::before{content:'→';position:absolute;left:0;color:#6366f1}
+  @media(max-width:700px){.grid2{grid-template-columns:1fr}td,th{padding:8px 10px;font-size:.78rem}}
+</style>
+</head>
+<body>
+<header><h1>📜 DSA Cheatsheet</h1><p>Big-O complexity, data structures & algorithms at a glance</p></header>
+<div class="container">
+  <a class="back" href="../index.html">← Back to Developer OS</a>
+  <div class="section-title">⏱ Big-O Complexity Chart</div>
+  <table>
+    <tr><th>Complexity</th><th>Name</th><th>Example</th><th>n=10</th><th>n=100</th><th>n=1000</th></tr>
+    <tr><td><span class="badge o1">O(1)</span></td><td>Constant</td><td>Array access</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr><td><span class="badge ologn">O(log n)</span></td><td>Logarithmic</td><td>Binary search</td><td>3</td><td>7</td><td>10</td></tr>
+    <tr><td><span class="badge on">O(n)</span></td><td>Linear</td><td>Linear search</td><td>10</td><td>100</td><td>1000</td></tr>
+    <tr><td><span class="badge onlogn">O(n log n)</span></td><td>Linearithmic</td><td>Merge sort</td><td>33</td><td>664</td><td>9966</td></tr>
+    <tr><td><span class="badge on2">O(n²)</span></td><td>Quadratic</td><td>Bubble sort</td><td>100</td><td>10K</td><td>1M</td></tr>
+    <tr><td><span class="badge on2">O(2ⁿ)</span></td><td>Exponential</td><td>Subsets</td><td>1024</td><td>~10³⁰</td><td>—</td></tr>
+  </table>
+  <div class="section-title">📦 Data Structure Operations</div>
+  <table>
+    <tr><th>Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th><th>Space</th></tr>
+    <tr><td>Array</td><td><span class="badge o1">O(1)</span></td><td><span class="badge on">O(n)</span></td><td><span class="badge on">O(n)</span></td><td><span class="badge on">O(n)</span></td><td><span class="badge on">O(n)</span></td></tr>
+    <tr><td>Linked List</td><td><span class="badge on">O(n)</span></td><td><span class="badge on">O(n)</span></td><td><span class="badge o1">O(1)</span></td><td><span class="badge o1">O(1)</span></td><td><span class="badge on">O(n)</span></td></tr>
+    <tr><td>Stack / Queue</td><td><span class="badge on">O(n)</span></td><td><span class="badge on">O(n)</span></td><td><span class="badge o1">O(1)</span></td><td><span class="badge o1">O(1)</span></td><td><span class="badge on">O(n)</span></td></tr>
+    <tr><td>Hash Table</td><td>—</td><td><span class="badge o1">O(1)</span></td><td><span class="badge o1">O(1)</span></td><td><span class="badge o1">O(1)</span></td><td><span class="badge on">O(n)</span></td></tr>
+    <tr><td>BST (balanced)</td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge on">O(n)</span></td></tr>
+    <tr><td>Heap</td><td><span class="badge o1">O(1)</span> peek</td><td><span class="badge on">O(n)</span></td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge on">O(n)</span></td></tr>
+  </table>
+  <div class="section-title">🔀 Sorting Algorithms</div>
+  <table>
+    <tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th></tr>
+    <tr><td>Bubble Sort</td><td><span class="badge on">O(n)</span></td><td><span class="badge on2">O(n²)</span></td><td><span class="badge on2">O(n²)</span></td><td><span class="badge o1">O(1)</span></td><td>✅</td></tr>
+    <tr><td>Merge Sort</td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge on">O(n)</span></td><td>✅</td></tr>
+    <tr><td>Quick Sort</td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge on2">O(n²)</span></td><td><span class="badge ologn">O(log n)</span></td><td>❌</td></tr>
+    <tr><td>Heap Sort</td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge o1">O(1)</span></td><td>❌</td></tr>
+    <tr><td>Counting Sort</td><td><span class="badge on">O(n+k)</span></td><td><span class="badge on">O(n+k)</span></td><td><span class="badge on">O(n+k)</span></td><td><span class="badge on">O(k)</span></td><td>✅</td></tr>
+  </table>
+  <div class="section-title">💡 Key Patterns</div>
+  <div class="grid2">
+    <div class="card-box"><h3>🪟 Sliding Window</h3><ul><li>Fixed/variable size subarray/substring</li><li>Max sum subarray of size k</li><li>Longest substring without repeat</li><li>Minimum window substring</li></ul></div>
+    <div class="card-box"><h3>👆 Two Pointers</h3><ul><li>Sorted array pair sum</li><li>Palindrome check</li><li>Container with most water</li><li>Remove duplicates in-place</li></ul></div>
+    <div class="card-box"><h3>🔄 Dynamic Programming</h3><ul><li>Overlapping subproblems + optimal substructure</li><li>Memoization (top-down) or tabulation (bottom-up)</li><li>Fibonacci, Knapsack, LCS, LIS</li><li>Coin change, Edit distance</li></ul></div>
+    <div class="card-box"><h3>🌲 Tree Traversals</h3><ul><li>Inorder: Left → Root → Right (BST sorted)</li><li>Preorder: Root → Left → Right (copy tree)</li><li>Postorder: Left → Right → Root (delete tree)</li><li>Level-order: BFS using queue</li></ul></div>
+  </div>
+</div>
+</body></html>
