@@ -1,0 +1,77 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JWT Decoder | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .jwt-part { margin-bottom:16px; }
+    .jwt-label { font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px; }
+    .label-header { color:#f59e0b; }
+    .label-payload { color:#60a5fa; }
+    .label-sig { color:#a78bfa; }
+    .exp-info { font-size:0.8rem; margin-top:10px; padding:10px 14px; border-radius:8px; }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">🪙 JWT Decoder</span>
+</div>
+<div class="container">
+  <div class="mb">
+    <label>Paste JWT Token</label>
+    <textarea id="jwt-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…" rows="4" oninput="decode()"></textarea>
+  </div>
+  <div id="result" style="display:none">
+    <div class="jwt-part">
+      <div class="jwt-label label-header">Header</div>
+      <div class="output-box" id="header-out"></div>
+    </div>
+    <div class="jwt-part">
+      <div class="jwt-label label-payload">Payload</div>
+      <div class="output-box" id="payload-out"></div>
+    </div>
+    <div class="jwt-part">
+      <div class="jwt-label label-sig">Signature</div>
+      <div class="output-box" id="sig-out"></div>
+    </div>
+    <div class="exp-info" id="exp-info"></div>
+  </div>
+  <div class="output-box error-border" id="error" style="display:none"></div>
+</div>
+<script>
+  function b64d(s) {
+    s = s.replace(/-/g,'+').replace(/_/g,'/');
+    while(s.length%4) s+='=';
+    return JSON.parse(decodeURIComponent(escape(atob(s))));
+  }
+  function fmt(obj) { return JSON.stringify(obj, null, 2); }
+  function decode() {
+    const raw = document.getElementById('jwt-input').value.trim();
+    const err = document.getElementById('error');
+    const res = document.getElementById('result');
+    if(!raw) { err.style.display='none'; res.style.display='none'; return; }
+    try {
+      const parts = raw.split('.');
+      if(parts.length!==3) throw new Error('JWT must have 3 parts separated by dots');
+      document.getElementById('header-out').textContent  = fmt(b64d(parts[0]));
+      document.getElementById('payload-out').textContent = fmt(b64d(parts[1]));
+      document.getElementById('sig-out').textContent     = parts[2];
+      const payload = b64d(parts[1]);
+      const expEl = document.getElementById('exp-info');
+      if(payload.exp) {
+        const expDate = new Date(payload.exp*1000);
+        const expired = Date.now() > payload.exp*1000;
+        expEl.style.background = expired ? 'rgba(255,94,122,0.12)' : 'rgba(0,217,166,0.1)';
+        expEl.style.color = expired ? '#ff5e7a' : '#00d9a6';
+        expEl.textContent = (expired ? '⚠️ Expired: ' : '✅ Expires: ') + expDate.toLocaleString();
+      } else { expEl.textContent = ''; expEl.style.background=''; }
+      res.style.display='block'; err.style.display='none';
+    } catch(e) {
+      err.textContent = '❌ ' + e.message; err.style.display='block'; res.style.display='none';
+    }
+  }
+</script>
+</body></html>
