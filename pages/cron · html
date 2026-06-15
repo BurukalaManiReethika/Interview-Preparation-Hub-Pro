@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cron Parser – Developer OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Poppins',sans-serif;background:#0d0d1a;color:#e2e8f0;min-height:100vh}
+  a.back{display:inline-flex;align-items:center;gap:8px;color:#a5b4fc;text-decoration:none;font-size:.85rem;font-weight:500;margin-bottom:28px}
+  a.back:hover{color:#fff}
+  header{background:linear-gradient(160deg,#111128 0%,#1a1a3e 100%);text-align:center;padding:40px 20px 32px;border-bottom:1px solid rgba(99,102,241,.25)}
+  header h1{font-size:2rem;font-weight:700;color:#fff}header p{font-size:.95rem;color:#94a3b8;margin-top:6px}
+  .container{max-width:800px;margin:0 auto;padding:36px 24px}
+  label{display:block;font-size:.82rem;font-weight:600;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+  input[type=text]{width:100%;background:#111128;border:1px solid rgba(99,102,241,.3);color:#e2e8f0;font-family:'Courier New',monospace;font-size:1.1rem;border-radius:10px;padding:14px 18px;outline:none;transition:border-color .2s;letter-spacing:3px;text-align:center}
+  input:focus{border-color:#6366f1}
+  .parts{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:16px}
+  .part{background:#111128;border:1px solid rgba(99,102,241,.2);border-radius:10px;padding:12px;text-align:center}
+  .part-val{font-size:1.2rem;font-weight:700;color:#a5b4fc;font-family:'Courier New',monospace}
+  .part-label{font-size:.72rem;color:#64748b;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+  .result-box{background:#111128;border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:20px;margin-top:20px}
+  .result-box h3{color:#e2e8f0;font-size:1rem;margin-bottom:12px}
+  .human{font-size:1rem;color:#34d399;font-weight:600;margin-bottom:16px}
+  .next-runs{list-style:none}
+  .next-runs li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:.85rem;color:#94a3b8;font-family:'Courier New',monospace}
+  .next-runs li:last-child{border-bottom:none}
+  .presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .preset-btn{background:transparent;border:1px solid rgba(99,102,241,.3);color:#a5b4fc;padding:6px 14px;border-radius:8px;font-size:.78rem;cursor:pointer;font-family:'Courier New',monospace;transition:all .2s}
+  .preset-btn:hover{background:rgba(99,102,241,.1);border-color:#6366f1}
+  .error{color:#f87171;font-size:.85rem;margin-top:10px}
+  @media(max-width:500px){.parts{grid-template-columns:repeat(5,1fr);gap:6px}.part{padding:8px 4px}.part-val{font-size:.9rem}}
+</style>
+</head>
+<body>
+<header><h1>⏱️ Cron Parser</h1><p>Parse and understand cron expressions in plain English</p></header>
+<div class="container">
+  <a class="back" href="../index.html">← Back to Developer OS</a>
+  <label>Cron Expression</label>
+  <input type="text" id="cronInput" value="0 9 * * 1-5" oninput="parse()" placeholder="* * * * *">
+  <div class="parts">
+    <div class="part"><div class="part-val" id="p0">*</div><div class="part-label">Minute</div></div>
+    <div class="part"><div class="part-val" id="p1">*</div><div class="part-label">Hour</div></div>
+    <div class="part"><div class="part-val" id="p2">*</div><div class="part-label">Day (Month)</div></div>
+    <div class="part"><div class="part-val" id="p3">*</div><div class="part-label">Month</div></div>
+    <div class="part"><div class="part-val" id="p4">*</div><div class="part-label">Day (Week)</div></div>
+  </div>
+  <div class="error" id="error"></div>
+  <div class="result-box" id="result">
+    <h3>📖 Human Readable</h3>
+    <div class="human" id="human">—</div>
+    <h3>🕐 Next 5 Runs</h3>
+    <ul class="next-runs" id="nextRuns"></ul>
+  </div>
+  <div class="presets">
+    <button class="preset-btn" onclick="setPreset('* * * * *')">Every minute</button>
+    <button class="preset-btn" onclick="setPreset('0 * * * *')">Every hour</button>
+    <button class="preset-btn" onclick="setPreset('0 0 * * *')">Every day at midnight</button>
+    <button class="preset-btn" onclick="setPreset('0 9 * * 1-5')">Weekdays at 9am</button>
+    <button class="preset-btn" onclick="setPreset('0 0 * * 0')">Every Sunday</button>
+    <button class="preset-btn" onclick="setPreset('0 0 1 * *')">1st of month</button>
+    <button class="preset-btn" onclick="setPreset('*/15 * * * *')">Every 15 min</button>
+    <button class="preset-btn" onclick="setPreset('0 0 1 1 *')">Every year</button>
+  </div>
+</div>
+<script>
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function setPreset(v){document.getElementById('cronInput').value=v;parse();}
+function parse(){
+  const expr=document.getElementById('cronInput').value.trim();
+  const parts=expr.split(/\s+/);
+  document.getElementById('error').textContent='';
+  if(parts.length!==5){document.getElementById('error').textContent='⚠️ Cron must have exactly 5 parts: min hour day month weekday';return;}
+  parts.forEach((p,i)=>document.getElementById('p'+i).textContent=p);
+  document.getElementById('human').textContent=toHuman(parts);
+  // Next runs
+  const runs=getNextRuns(parts,5);
+  const ul=document.getElementById('nextRuns');
+  ul.innerHTML=runs.map(d=>`<li>${d.toLocaleString()}</li>`).join('');
+}
+function toHuman([min,hr,dom,mon,dow]){
+  let s='Runs ';
+  if(min==='*'&&hr==='*') s+='every minute';
+  else if(min==='*') s+=`every minute of hour ${hr}`;
+  else if(hr==='*') s+=`at minute ${min} of every hour`;
+  else s+=`at ${hr.padStart(2,'0')}:${min.padStart(2,'0')}`;
+  if(dow!=='*') s+=`, on ${dow.split(',').map(d=>DAYS[parseInt(d)]||d).join(', ')}`;
+  if(dom!=='*') s+=`, on day ${dom} of the month`;
+  if(mon!=='*') s+=`, in ${mon.split(',').map(m=>MONTHS[parseInt(m)-1]||m).join(', ')}`;
+  return s;
+}
+function getNextRuns(parts,count){
+  const results=[];
+  let d=new Date();d.setSeconds(0,0);d.setMinutes(d.getMinutes()+1);
+  let attempts=0;
+  while(results.length<count&&attempts<10000){
+    attempts++;
+    if(matchField(parts[3],d.getMonth()+1,1,12)&&matchField(parts[2],d.getDate(),1,31)&&matchField(parts[4],d.getDay(),0,6)&&matchField(parts[1],d.getHours(),0,23)&&matchField(parts[0],d.getMinutes(),0,59)){
+      results.push(new Date(d));
+    }
+    d.setMinutes(d.getMinutes()+1);
+  }
+  return results;
+}
+function matchField(field,val,min,max){
+  if(field==='*') return true;
+  if(field.startsWith('*/')){const step=parseInt(field.slice(2));return val%step===0;}
+  if(field.includes('-')){const[a,b]=field.split('-').map(Number);return val>=a&&val<=b;}
+  return field.split(',').map(Number).includes(val);
+}
+parse();
+</script>
+</body></html>
