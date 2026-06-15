@@ -809,6 +809,243 @@ explainCron();
 setTimer(45);
 runDiff();
 initFlashcards();
+
+
+    :root {
+      --bg: #0d0f14;
+      --surface: #161a23;
+      --border: #252a36;
+      --accent: #6c63ff;
+      --accent2: #00d9a6;
+      --text: #e2e8f0;
+      --muted: #7a8498;
+      --card-bg: #1a1f2e;
+      --card-hover: #1f2538;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(108,99,255,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header .badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent2);
+      border: 1px solid var(--accent2);
+      border-radius: 20px;
+      padding: 3px 12px;
+      margin-bottom: 18px;
+      letter-spacing: 0.08em;
+    }
+    header h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 30%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header p {
+      color: var(--muted);
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+
+    .search-bar {
+      max-width: 480px;
+      margin: 30px auto 0;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      padding: 12px 20px 12px 44px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-bar input:focus { border-color: var(--accent); }
+    .search-bar svg {
+      position: absolute;
+      left: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 20px 20px 60px; }
+
+    .category { margin-bottom: 48px; }
+    .category-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent2);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .category-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: background 0.18s, border-color 0.18s, transform 0.18s;
+    }
+    .card:hover {
+      background: var(--card-hover);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .card-icon { font-size: 1.5rem; }
+    .card-name { font-size: 0.88rem; font-weight: 600; }
+    .card-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
+    .hidden { display: none !important; }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent2); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">50+ tools · always free</div>
+  <h1>🚀 Developer OS</h1>
+  <p>All developer utilities in one place</p>
+  <div class="search-bar">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="Search tools…" autocomplete="off">
+  </div>
+</header>
+
+<main id="main">
+
+  <div class="category">
+    <div class="category-label">Text &amp; Data</div>
+    <div class="grid">
+      <a href="pages/json.html" class="card"><span class="card-icon">📄</span><span class="card-name">JSON Formatter</span><span class="card-desc">Format, validate &amp; minify JSON</span></a>
+      <a href="pages/markdown.html" class="card"><span class="card-icon">📝</span><span class="card-name">Markdown Previewer</span><span class="card-desc">Live render markdown to HTML</span></a>
+      <a href="pages/base64.html" class="card"><span class="card-icon">🔄</span><span class="card-name">Base64 Encoder</span><span class="card-desc">Encode and decode Base64</span></a>
+      <a href="pages/url-encode.html" class="card"><span class="card-icon">🔗</span><span class="card-name">URL Encoder</span><span class="card-desc">Encode/decode URL strings</span></a>
+      <a href="pages/jwt.html" class="card"><span class="card-icon">🪙</span><span class="card-name">JWT Decoder</span><span class="card-desc">Decode &amp; inspect JWT tokens</span></a>
+      <a href="pages/diff.html" class="card"><span class="card-icon">↔️</span><span class="card-name">Text Diff</span><span class="card-desc">Compare two blocks of text</span></a>
+      <a href="pages/word-count.html" class="card"><span class="card-icon">🔢</span><span class="card-name">Word Counter</span><span class="card-desc">Count words, chars &amp; lines</span></a>
+      <a href="pages/csv.html" class="card"><span class="card-icon">📊</span><span class="card-name">CSV to JSON</span><span class="card-desc">Convert CSV data to JSON</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Generators</div>
+    <div class="grid">
+      <a href="pages/password.html" class="card"><span class="card-icon">🔐</span><span class="card-name">Password Generator</span><span class="card-desc">Strong random passwords</span></a>
+      <a href="pages/qr.html" class="card"><span class="card-icon">📱</span><span class="card-name">QR Generator</span><span class="card-desc">Generate QR codes instantly</span></a>
+      <a href="pages/uuid.html" class="card"><span class="card-icon">🆔</span><span class="card-name">UUID Generator</span><span class="card-desc">Generate v1, v4 UUIDs</span></a>
+      <a href="pages/lorem.html" class="card"><span class="card-icon">📜</span><span class="card-name">Lorem Ipsum</span><span class="card-desc">Generate placeholder text</span></a>
+      <a href="pages/hash.html" class="card"><span class="card-icon">#️⃣</span><span class="card-name">Hash Generator</span><span class="card-desc">MD5, SHA-1, SHA-256</span></a>
+      <a href="pages/regex.html" class="card"><span class="card-icon">🔍</span><span class="card-name">Regex Tester</span><span class="card-desc">Test &amp; debug regex live</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Color &amp; Design</div>
+    <div class="grid">
+      <a href="pages/color.html" class="card"><span class="card-icon">🎨</span><span class="card-name">Color Palette</span><span class="card-desc">Random color generator</span></a>
+      <a href="pages/color-convert.html" class="card"><span class="card-icon">🖌️</span><span class="card-name">Color Converter</span><span class="card-desc">HEX ↔ RGB ↔ HSL</span></a>
+      <a href="pages/gradient.html" class="card"><span class="card-icon">🌈</span><span class="card-name">Gradient Maker</span><span class="card-desc">Build CSS gradients visually</span></a>
+      <a href="pages/box-shadow.html" class="card"><span class="card-icon">📦</span><span class="card-name">Box Shadow</span><span class="card-desc">CSS box-shadow generator</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Calculators &amp; Converters</div>
+    <div class="grid">
+      <a href="pages/timestamp.html" class="card"><span class="card-icon">⏱️</span><span class="card-name">Timestamp</span><span class="card-desc">Unix timestamp converter</span></a>
+      <a href="pages/cron.html" class="card"><span class="card-icon">🕐</span><span class="card-name">Cron Parser</span><span class="card-desc">Parse &amp; explain cron expressions</span></a>
+      <a href="pages/px-rem.html" class="card"><span class="card-icon">📐</span><span class="card-name">PX ↔ REM</span><span class="card-desc">Convert px and rem values</span></a>
+      <a href="pages/aspect-ratio.html" class="card"><span class="card-icon">🖼️</span><span class="card-name">Aspect Ratio</span><span class="card-desc">Calculate responsive dimensions</span></a>
+    </div>
+  </div>
+
+  <div class="category">
+    <div class="category-label">Productivity</div>
+    <div class="grid">
+      <a href="pages/notes.html" class="card"><span class="card-icon">📋</span><span class="card-name">Notes App</span><span class="card-desc">Quick scratchpad, auto-saves</span></a>
+      <a href="pages/pomodoro.html" class="card"><span class="card-icon">🍅</span><span class="card-name">Pomodoro Timer</span><span class="card-desc">Focus timer with breaks</span></a>
+      <a href="pages/todo.html" class="card"><span class="card-icon">✅</span><span class="card-name">To-Do List</span><span class="card-desc">Simple task manager</span></a>
+      <a href="pages/meta-tags.html" class="card"><span class="card-icon">🏷️</span><span class="card-name">Meta Tags</span><span class="card-desc">Preview OG &amp; Twitter cards</span></a>
+    </div>
+  </div>
+
+</main>
+
+<footer>Made with <span>♥</span> by Mani &nbsp;·&nbsp; Developer OS</footer>
+
+<script>
+  const input = document.getElementById('search');
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    document.querySelectorAll('.card').forEach(card => {
+      const text = card.textContent.toLowerCase();
+      card.classList.toggle('hidden', q && !text.includes(q));
+    });
+    document.querySelectorAll('.category').forEach(cat => {
+      const visible = [...cat.querySelectorAll('.card')].some(c => !c.classList.contains('hidden'));
+      cat.classList.toggle('hidden', !visible);
+    });
+  });
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
