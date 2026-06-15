@@ -1,0 +1,54 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hash Generator | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .hash-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .hash-algo { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--accent2); width:80px; flex-shrink:0; }
+    .hash-val  { font-family:'JetBrains Mono',monospace; font-size:0.78rem; flex:1; word-break:break-all; background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:8px 12px; }
+    .copy-btn  { background:none; border:1px solid var(--border); color:var(--muted); border-radius:6px; padding:4px 10px; cursor:pointer; font-size:0.72rem; transition:border-color .15s,color .15s; }
+    .copy-btn:hover { border-color:var(--accent); color:var(--text); }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">#️⃣ Hash Generator</span>
+</div>
+<div class="container">
+  <div class="mb">
+    <label>Input Text</label>
+    <textarea id="inp" rows="4" placeholder="Type something to hash…" oninput="hashAll()"></textarea>
+  </div>
+  <div id="hashes">
+    <div class="hash-row"><span class="hash-algo">SHA-1</span><span class="hash-val" id="sha1">—</span><button class="copy-btn" onclick="copyHash('sha1',this)">Copy</button></div>
+    <div class="hash-row"><span class="hash-algo">SHA-256</span><span class="hash-val" id="sha256">—</span><button class="copy-btn" onclick="copyHash('sha256',this)">Copy</button></div>
+    <div class="hash-row"><span class="hash-algo">SHA-384</span><span class="hash-val" id="sha384">—</span><button class="copy-btn" onclick="copyHash('sha384',this)">Copy</button></div>
+    <div class="hash-row"><span class="hash-algo">SHA-512</span><span class="hash-val" id="sha512">—</span><button class="copy-btn" onclick="copyHash('sha512',this)">Copy</button></div>
+  </div>
+  <p style="color:var(--muted);font-size:0.75rem;margin-top:14px">Note: MD5 is not available in the browser's native crypto API. Use SHA-256 for security-sensitive use cases.</p>
+</div>
+<script>
+  async function hashText(algo, text) {
+    const buf = await crypto.subtle.digest(algo, new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  async function hashAll() {
+    const t = document.getElementById('inp').value;
+    if(!t) { ['sha1','sha256','sha384','sha512'].forEach(id=>document.getElementById(id).textContent='—'); return; }
+    const [h1,h256,h384,h512] = await Promise.all([
+      hashText('SHA-1',t), hashText('SHA-256',t), hashText('SHA-384',t), hashText('SHA-512',t)
+    ]);
+    document.getElementById('sha1').textContent=h1;
+    document.getElementById('sha256').textContent=h256;
+    document.getElementById('sha384').textContent=h384;
+    document.getElementById('sha512').textContent=h512;
+  }
+  function copyHash(id,btn) {
+    navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{btn.textContent='✓';setTimeout(()=>btn.textContent='Copy',1500);});
+  }
+</script>
+</body></html>
