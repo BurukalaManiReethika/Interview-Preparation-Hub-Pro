@@ -1,0 +1,39 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>URL Encoder | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">🔗 URL Encoder / Decoder</span>
+</div>
+<div class="container">
+  <div class="mb">
+    <label>Input</label>
+    <textarea id="input" placeholder="Paste a URL or URL-encoded string…"></textarea>
+  </div>
+  <div class="flex">
+    <button class="btn btn-primary" onclick="encode()">Encode →</button>
+    <button class="btn btn-secondary" onclick="decode()">← Decode</button>
+    <button class="btn btn-secondary" onclick="copy()">📋 Copy</button>
+    <button class="btn btn-secondary" onclick="clear_()">Clear</button>
+  </div>
+  <div class="divider"></div>
+  <label>Output</label>
+  <div class="output-box" id="output">Result will appear here…</div>
+</div>
+<div class="toast" id="toast">Copied!</div>
+<script>
+  const inp = () => document.getElementById('input').value;
+  const out = document.getElementById('output');
+  function encode() { try { out.textContent = encodeURIComponent(inp()); out.className='output-box success-border'; } catch(e) { out.textContent='Error: '+e.message; out.className='output-box error-border'; } }
+  function decode() { try { out.textContent = decodeURIComponent(inp()); out.className='output-box success-border'; } catch(e) { out.textContent='Error: Invalid encoded input'; out.className='output-box error-border'; } }
+  function copy() { navigator.clipboard.writeText(out.textContent).then(()=>toast()); }
+  function clear_() { document.getElementById('input').value=''; out.textContent='Result will appear here…'; out.className='output-box'; }
+  function toast() { const t=document.getElementById('toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+</script>
+</body></html>
