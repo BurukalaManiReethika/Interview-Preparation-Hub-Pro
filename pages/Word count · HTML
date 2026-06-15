@@ -1,0 +1,44 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Word Counter | Developer OS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; margin-top:20px; }
+    .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center; }
+    .stat-value { font-family:'JetBrains Mono',monospace; font-size:1.8rem; font-weight:700; color:var(--accent); }
+    .stat-label { font-size:0.75rem; color:var(--muted); margin-top:4px; }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <a href="../index.html" class="back-btn">← Back</a>
+  <span class="page-title">🔢 Word Counter</span>
+</div>
+<div class="container">
+  <label>Type or paste text</label>
+  <textarea id="inp" rows="10" placeholder="Start typing…" oninput="count()"></textarea>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value" id="words">0</div><div class="stat-label">Words</div></div>
+    <div class="stat-card"><div class="stat-value" id="chars">0</div><div class="stat-label">Characters</div></div>
+    <div class="stat-card"><div class="stat-value" id="chars-ns">0</div><div class="stat-label">Chars (no spaces)</div></div>
+    <div class="stat-card"><div class="stat-value" id="lines">0</div><div class="stat-label">Lines</div></div>
+    <div class="stat-card"><div class="stat-value" id="sentences">0</div><div class="stat-label">Sentences</div></div>
+    <div class="stat-card"><div class="stat-value" id="read">0</div><div class="stat-label">Read time (min)</div></div>
+  </div>
+</div>
+<script>
+  function count() {
+    const t = document.getElementById('inp').value;
+    const words = t.trim() ? t.trim().split(/\s+/).length : 0;
+    document.getElementById('words').textContent      = words;
+    document.getElementById('chars').textContent      = t.length;
+    document.getElementById('chars-ns').textContent   = t.replace(/\s/g,'').length;
+    document.getElementById('lines').textContent      = t ? t.split('\n').length : 0;
+    document.getElementById('sentences').textContent  = (t.match(/[.!?]+/g)||[]).length;
+    document.getElementById('read').textContent       = Math.ceil(words/200)||0;
+  }
+</script>
+</body></html>
